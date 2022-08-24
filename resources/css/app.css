@@ -1,0 +1,234 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'vue3-date-time-picker/dist/main.css';
+.dp__input {
+    padding: 1px 2px;
+    font-size: 12px;
+    line-height: 24px;
+}
+
+.dp__input input {
+    padding: 0px 40px;
+}
+
+body {
+    @apply h-screen bg-gradient-to-t from-sky-200 bg-fixed;
+}
+
+.content {
+    @apply bg-white rounded-lg p-4 shadow-sm;
+    /*width: fit-content;*/
+}
+
+.auth-container {
+    @apply w-screen h-screen flex items-center justify-center;
+}
+
+.login-form {
+    max-width: 400px;
+    @apply m-4 bg-white rounded-lg w-full md:w-1/4 p-4 shadow-md;
+}
+
+input[type=text], input[type=password], select, textarea {
+    @apply rounded-md border py-1 px-2 focus:outline-none text-sm w-full;
+}
+
+input[type=text].big, input[type=password].big {
+    @apply shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight;
+}
+
+select.big {
+    @apply block appearance-none w-full border border-gray-200 py-3 px-4 pr-8 rounded leading-tight;
+}
+
+input[type=text].small,input[type=password].small, select.small {
+    @apply w-auto text-xs p-1;
+}
+
+input[type=text]:focus,input[type=password]:focus, select:focus {
+    @apply border-emerald-600;
+}
+
+.btn {
+    @apply px-2 py-1 transition-all duration-500 text-sm text-white rounded-md flex flex-row items-center justify-center;
+}
+
+.btn:disabled {
+    @apply opacity-50;
+}
+
+.btn-primary {
+    @apply bg-emerald-700 hover:bg-emerald-400;
+}
+
+.btn-primary-outline {
+    @apply bg-transparent border border-emerald-700 text-emerald-700;
+}
+
+.btn-primary:disabled {
+    @apply hover:bg-emerald-700;
+}
+
+.btn-secondary {
+    @apply bg-violet-700 hover:bg-violet-400;
+}
+
+.btn-secondary:disabled {
+    @apply hover:bg-violet-700;
+}
+
+.btn-secondary-outline {
+    @apply bg-transparent border border-violet-400 text-violet-400;
+}
+
+.btn-danger {
+    @apply bg-red-300 hover:bg-red-200;
+}
+
+.alert {
+    @apply p-2 rounded-md;
+}
+
+.alert-error {
+    @apply bg-red-300 border border-red-500 text-red-900;
+}
+
+.payouts-table {
+    @apply table-auto w-full;
+}
+
+.payouts-table td {
+
+}
+
+.payouts-table thead th, .payouts-table thead td, .payouts-table tbody td, .payouts-table tfoot td {
+    @apply p-1 text-center text-xs;
+}
+
+.users-table thead th, .users-table thead td, .users-table tbody td, .users-table tfoot td {
+    @apply p-1 text-center text-xs;
+}
+
+.tickets-table thead th, .tickets-table thead td, .tickets-table tbody td, .tickets-table tfoot td {
+    @apply p-1 text-left text-xs;
+}
+
+.nodes-table thead th, .nodes-table thead td, .nodes-table tbody td, .nodes-table tfoot td {
+    @apply p-1 text-left text-xs;
+}
+
+.ticket-messages-table thead th, .ticket-messages-table thead td, .ticket-messages-table tbody td, .ticket-messages-table tfoot td {
+    @apply p-1 text-left text-xs;
+}
+
+.ticket-messages-table td {
+    overflow-wrap: anywhere;
+}
+
+.payouts-table tfoot td {
+    @apply font-bold;
+}
+
+.logo {
+    display: inline-block;
+    width: 27px;
+    height: 27px;
+    background-image: url("/img/logo.png");
+    background-size: cover;
+    @apply rounded-full;
+}
+
+.paginator {
+    @apply flex;
+}
+
+.paginator li {
+    width: 32px;
+    @apply px-2 py-2 cursor-pointer text-center border-l border-t border-b text-xs hover:bg-sky-50;
+}
+
+.paginator li:first-child {
+    @apply rounded-l-md;
+}
+
+.paginator li:last-child {
+    @apply border-r rounded-r-md;
+}
+
+.paginator li.selected {
+    @apply bg-sky-100 cursor-auto;
+}
+
+.payout-status-created {
+    @apply bg-gray-200;
+}
+
+.payout-status-sent {
+    @apply bg-yellow-200;
+}
+
+.payout-status-success {
+    @apply bg-emerald-200;
+}
+
+.payout-status-failed {
+    @apply bg-red-200;
+}
+
+.payout-status-pending {
+    @apply bg-blue-200;
+}
+
+.payout-status-partial {
+    @apply bg-orange-200;
+}
+
+tr:hover td.payout-status-created {
+    @apply bg-gray-100;
+}
+
+tr:hover td.payout-status-sent {
+    @apply bg-yellow-100;
+}
+
+tr:hover td.payout-status-success {
+    @apply bg-emerald-100;
+}
+
+tr:hover td.payout-status-failed {
+    @apply bg-red-100;
+}
+
+tr:hover td.payout-status-pending {
+    @apply bg-blue-100;
+}
+
+tr:hover td.payout-status-partial {
+    @apply bg-orange-100;
+}
+
+
+.modal {
+    max-width: 800px;
+    min-width: 600px;
+}
+
+/*------ Sidebar ------*/
+
+aside.narrowed + section {
+    margin-left: 4rem;
+}
+
+aside.expanded + section {
+    margin-left: 16rem;
+}
+
+aside .hover\:bg-gray-100:hover {
+    background-color: #00000014;
+}
+
+/*---------------------*/
+
+
