@@ -22,3 +22,4 @@ import store from "./app/store";
 const app = createApp(Gdesk)
     .use(router)
     .use(store).mount('#app')
+window.vueapp = app;

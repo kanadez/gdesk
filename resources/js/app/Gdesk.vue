@@ -16,7 +16,7 @@ export default {
     },
     data() {
         return {
-
+            isReady: true // TODO здесь сделать условие подготовки
         }
     },
     async created() {
