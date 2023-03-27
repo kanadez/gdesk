@@ -1,5 +1,8 @@
 import $ from "jquery";
 
+// GLOBALS
+window.current_opened_location_id = null;
+
 class YMapsJQuery {
 
     myMap;
@@ -65,8 +68,20 @@ class YMapsJQuery {
 
             this.myMap.events.add('click', function (e) {
                 let coords = e.get('coords');
-                ymapsjq.addMarker(coords);
-                ymapsjq.saveMarker(coords);
+                window.ADD_LOCATION_COORDS_GLOBAL = coords;
+                //ymapsjq.addMarker(id, coords);
+                //ymapsjq.saveMarker(coords);
+
+                let baloon = e.get('map').balloon.open(coords,
+                    '<div style="margin: 10px; width: 100%; text-align: center;">' +
+                    'Хотите создать здесь локацию?' +
+                    '</div>' +
+                    '<div style="margin: 10px; width: 100%; text-align: center;">' +
+                    '<button onclick="openModal(\'add-lacation\');ymapsjq.myMap.balloon.close();" style="padding:10px" id="my-button"> Создать локацию </button>' +
+                    '</div>', {
+                    // Опция: не показываем кнопку закрытия.
+                    closeButton: true
+                });
             });
 
             var location = ymaps.geolocation.get({
@@ -94,7 +109,7 @@ class YMapsJQuery {
                         var coords = [];
                         coords.push(marker.lat);
                         coords.push(marker.lng);
-                        ymapsjq.addMarker(coords);
+                        ymapsjq.addMarker(marker.location_id, coords);
                     });
                 },
                 error: function(){
@@ -110,52 +125,61 @@ class YMapsJQuery {
 
     }
 
-    addMarker(coords) {
+    addMarker(location_id, coords) {
         let that = this;
-        let BalloonContentLayout = ymaps.templateLayoutFactory.createClass(
-            '<div style="margin: 10px;">' +
-            '<button style="padding:10px" id="my-button"> Удалить </button>' +
+        /*let BalloonContentLayout = ymaps.templateLayoutFactory.createClass(
+            '<div style="margin: 10px; width: 100%; text-align: center;">' +
+            'Хотите открыть локацию?' +
+            '</div>' +
+            '<div style="margin: 10px; width: 100%; text-align: center;">' +
+            '<button style="padding:10px" id="my-button"> Открыть локацию </button>' +
             '</div>', {
                 build() {
                     BalloonContentLayout.superclass.build.call(this);
-                    document.getElementById(`my-button`).addEventListener("click", e => { that.deleteMarker() });
+                    document.getElementById(`my-button`).addEventListener("click", e => {
+                        BalloonContentLayout.superclass.clear.call(this);
+                    });
                 },
                 clear() {
-                    document.getElementById(`my-button`).removeEventListener('click', that.deleteMarker());
                     BalloonContentLayout.superclass.clear.call(this);
                 },
             }
-        );
+        );*/
 
         let new_marker = new ymaps.Placemark(coords, {
-            name: 'Открыть карту с меткой',
-            iconCaption: 'Скамейка'
+            //name: 'Открыть карту с меткой',
+            //iconCaption: 'Скамейка'
         }, {
-            balloonContentLayout: BalloonContentLayout,
-            balloonPanelMaxMapArea: 0,
+            //balloonContentLayout: BalloonContentLayout,
+            //balloonPanelMaxMapArea: 0,
             preset: 'islands#redDotIconWithCaption'
         });
         new_marker.events.add('click', e => {
             this.current_marker = e.get("target");
+            window.current_opened_location_id = location_id;
+            openModal('view-lacation');
         });
         this.myMap.geoObjects.add(new_marker);
     }
 
-    saveMarker(coords) {
+    saveMarker(location_id, coords) {
+        console.log(location_id)
         $.ajax({
             type: "POST",
-            url: "/api/ymaps/markers/create",
+            url: "/api/ymaps/markers/store",
             data: {
-                coords: {lat: coords[0], lng: coords[1]}
+                location_id: location_id,
+                lat: coords[0],
+                lng: coords[1]
             },
             success(data){
 
             },
             error(){
-
+                alert("Что-то пошло не так, локация не сохранена!");
             }
         }).fail(function(){
-            alert("Что-то пошло не так, маркер не сохранен.");
+            alert("Что-то пошло не так, локация не сохранена!");
         });
     }
 

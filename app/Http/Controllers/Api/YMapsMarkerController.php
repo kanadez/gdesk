@@ -13,18 +13,18 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Api\CreateYMapsMarkerRequest;
 
-use App\Repository\YMapMarkerRepository;
+use App\Repository\YMapsMarkerRepository;
 
 class YMapsMarkerController extends Controller
 {
 
     /**
      *
-     * @var YMapMarkerRepository
+     * @var YMapsMarkerRepository
      */
     private $repo;
 
-    public function __construct(YMapMarkerRepository $repo)
+    public function __construct(YMapsMarkerRepository $repo)
     {
         $this->repo = $repo;
     }
@@ -41,10 +41,7 @@ class YMapsMarkerController extends Controller
 
     public function create(CreateYMapsMarkerRequest $request)
     {
-        $data = $request->validated();
-        $coords = $data["coords"];
-
-        $this->repo->create($coords);
+        $this->repo->create($request->validated());
 
         return response()->json([
             "status" => "success"

@@ -1,0 +1,327 @@
+<template>
+    <div>
+
+        <div class="modal-backdrop modal-full" id="add-lacation">
+            <div class="modal">
+                <div class="modal__body">
+                    <div class="header__center">
+                        <div class="title">Создать локацию</div>
+                        <div class="modal__close" onclick="closeModal('add-lacation')"><img src="images/icon/i-close.svg">
+                        </div>
+                    </div>
+                    <form onsubmit="return false">
+                        <div class="form-row">
+                            <input class="input-text" v-model="title" maxlength="255" type="text"
+                                   placeholder="Название локации">
+                        </div>
+                        <div class="form-row">
+                            <select v-model="category" class="input-text">
+                                <option value="">Выбрать категорию</option>
+                                <option v-for="(category, index) in categories" :value="category.id">{{ category.name }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <textarea v-model="description" class="input-text" maxlength="1000"
+                                      placeholder="Описание"></textarea>
+                        </div>
+                        <div class="add-photo">
+                            <div class="add-photo__thumb">
+                                <div v-for="image in previewImages" class="add-photo__item"><img :src="image"></div>
+                            </div>
+                            <div class="input-file">
+                                <input id="input-file" type="file" accept=".jpg,.jpeg," multiple
+                                       @change="uploadImages($event)">
+                                <label for="input-file">Загрузить фото</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <input v-on:keydown.enter.prevent="addTag" v-model="addTagInputValue" class="input-text"
+                                   type="text" placeholder="Хештеги (введите по одному, нажимая Enter)">
+                        </div>
+                        <div class="row-tags">
+                            <div class="tag" v-for="tag in tags">{{ tag }}</div>
+                        </div>
+                        <button class="btn" onclick="openModal('create-route-and-add-location-modal')">Добавить в маршрут</button>
+                        <button class="btn" type="button" @click="submit">Создать локацию</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mask-modal -show"></div>
+        </div>
+
+        <SuccessModal
+            id="add-location-success-modal"
+            title="Запрос отправлен"
+            message="Запрос на создание локации успешно отправлен. Мы посмотрим и добавим локацию на карту, если всё хорошо."
+        ></SuccessModal>
+
+        <ErrorModal
+            id="error-modal"
+            :title=errorModalData.title
+            :message=errorModalData.message
+        ></ErrorModal>
+
+        <InfoModal
+            id="add-location-upload-count-limit-warning-modal"
+            title="Предупреждение"
+            message="Можно загрузить только 6 изображений!"
+            secondary="true"
+        ></InfoModal>
+
+        <InfoModal
+            id="add-location-upload-size-limit-warning-modal"
+            title="Предупреждение"
+            message="Изображение должно быть не больше 5 мегабайт! Выберите поменьше."
+            secondary="true"
+        ></InfoModal>
+
+        <InfoModal
+            id="add-location-upload-size-limit-warning-modal"
+            title="Предупреждение"
+            message="Изображение должно быть не больше 5 мегабайт! Выберите поменьше."
+            secondary="true"
+        ></InfoModal>
+
+        <PromptModal
+            id="create-route-and-add-location-modal"
+            title="Создать маршрут"
+            message='Введите название нового маршрута и нажмите "Добавить локацию"'
+            action_text="Добавить локацию в маршрут"
+            @action="submitCreatedRoute"
+            secondary="true"
+        ></PromptModal>
+
+        <loading v-model:active="isLoading"
+                 :can-cancel="false"
+                 :is-full-page="true"/>
+
+    </div>
+</template>
+
+<script>
+
+import Errors from "../UI/Errors";
+import SuccessModal from "../Components/SuccessModal";
+import ErrorModal from "../Components/ErrorModal";
+import InfoModal from "../Components/InfoModal";
+import PromptModal from "../Components/PromptModal";
+import {NetworkStatusMixin} from "../Mixins/network-status-mixin";
+import Loading from 'vue-loading-overlay';
+//import 'vue-loading-overlay/dist/css/index.css';
+
+const MAX_IMAGES_UPLOAD = 6;
+const MAX_FILE_SIZE = 5242880; // 5 MB, 1048576 * 5
+
+export default {
+    name: "AddLocationModal",
+    components: {
+        Errors,
+        SuccessModal,
+        InfoModal,
+        PromptModal,
+        ErrorModal,
+        Loading
+    },
+    mixins: [
+        NetworkStatusMixin
+    ],
+    props: {
+        categories: Array
+    },
+    computed: {
+        isLoading() {
+            return this.$store.getters['locations/loading'] || this.$store.getters['locations_images/loading'];
+        },
+    },
+    data() {
+        return {
+            isSending: false,
+
+            title: '',
+            description: '',
+            category: '',
+
+            previewImages: [],
+            imagesToUpload: [],
+            imagesToUploadPaths: [],
+
+            addTagInputValue: '',
+            tags: [],
+
+            createdRoute: '',
+
+            params: {
+                title: '',
+                description: '',
+                category: null,
+                images: [],
+                tags: [],
+            },
+            errors: null,
+
+            errorModalData: {
+                title: '',
+                message: ''
+            }
+        }
+    },
+    methods: {
+        uploadImages(event) {
+            if (this.previewImages.length >= MAX_IMAGES_UPLOAD) {
+                openModal('add-location-upload-count-limit-warning-modal');
+
+                return false;
+            }
+
+            for (let i = 0; i < event.target.files.length; i++) {
+                if (this.imagesToUpload.length >= MAX_IMAGES_UPLOAD) {
+                    openModal('add-location-upload-count-limit-warning-modal');
+
+                    continue;
+                }
+
+                const image = event.target.files[i];
+
+                if (image.size > MAX_FILE_SIZE) {
+                    openModal('add-location-upload-size-limit-warning-modal');
+
+                    continue;
+                }
+
+                this.imagesToUpload.push(image);
+
+                const reader = new FileReader();
+                reader.readAsDataURL(image);
+                reader.onload = event => {
+                    this.previewImages.push(event.target.result);
+                };
+            }
+
+            if (this.imagesToUpload.length === 0) return false;
+            if (this.isSending) return;
+            this.errors = null;
+            this.isSending = true;
+            let data = new FormData();
+
+            for (let i = 0; i < this.imagesToUpload.length; i++) {
+                data.append(`file${i}`, this.imagesToUpload[i]);
+            }
+
+            this.$store.dispatch(`locations_images/upload`, data).then(
+                success => {
+                    this.imagesToUploadPaths = this.$store.state.locations_images.imagesPaths
+                    this.imagesToUpload = [];
+                },
+                error => {
+                    this.imagesToUpload = [];
+                    this.previewImages = [];
+                    this.errors = error;
+                    this.errorModalData = this.handleError(error);
+                    openModal('error-modal');
+                }
+            ).catch(error => {
+                this.imagesToUpload = [];
+                this.previewImages = [];
+                this.errors = error;
+                this.errorModalData = this.handleError(error);
+                openModal('error-modal');
+            }).finally(() => {
+                this.isSending = false;
+            });
+        },
+
+        addTag(event) {
+            event.preventDefault();
+
+            this.tags.push(this.addTagInputValue);
+            this.addTagInputValue = '';
+        },
+
+        submit() {
+            this.params.title = this.title;
+            this.params.description = this.description;
+            this.params.category = this.category;
+            this.params.images = this.imagesToUploadPaths;
+            this.params.tags = this.tags;
+
+            this.$store.dispatch(`locations/store`, this.params).then(
+                success => {
+                    // Создаем и сохраняем маркер на карте
+                    let location_id = this.$store.getters['locations/storedLocationId'];
+                    ymapsjq.addMarker(location_id, window.ADD_LOCATION_COORDS_GLOBAL);
+                    ymapsjq.saveMarker(location_id, window.ADD_LOCATION_COORDS_GLOBAL);
+
+                    // Завершаем создание локации
+                    this.resetData();
+                    closeCurrentModal();
+                    openModal('add-location-success-modal');
+                },
+                error => {
+                    this.errors = error; // TODO обработать через миксим
+                    this.errorModalData = this.handleError(error);
+                    openModal('error-modal');
+                }
+            ).catch(error => {
+                this.errors = error;
+                this.errorModalData = this.handleError(error);
+                openModal('error-modal');
+            }).finally(() => {
+                this.isSending = false;
+            });
+        },
+
+        resetData() {
+            this.title = '';
+            this.description = '';
+            this.category = null;
+
+            this.previewImages = [];
+            this.imagesToUpload = [];
+            this.imagesToUploadPaths = [];
+
+            this.addTagInputValue = '';
+            this.tags = [];
+            this.createdRoute = '';
+
+            this.params = {
+                title: '',
+                description: '',
+                category: null,
+                images: [],
+                tags: [],
+            };
+
+            window.ADD_LOCATION_COORDS_GLOBAL = [];
+        },
+
+        submitCreatedRoute(route_data) {
+            this.$store.dispatch(`routes/store`, route_data).then(
+                success => {
+
+                },
+                error => {
+                    this.errors = error; // TODO обработать через миксим
+                    this.errorModalData = this.handleError(error);
+                    openModal('error-modal');
+                }
+            ).catch(error => {
+                this.errors = error;
+                this.errorModalData = this.handleError(error);
+                openModal('error-modal');
+            }).finally(() => {
+                this.isSending = false;
+            });
+        },
+
+    },
+
+    created() {
+
+    }
+}
+</script>
+
+<style scoped>
+
+</style>
