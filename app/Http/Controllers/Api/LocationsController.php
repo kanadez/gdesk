@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Repository\RouteRepository;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\Api\CreateLocationRequest;
@@ -27,16 +28,23 @@ class LocationsController extends Controller
     private $categories;
 
     /**
+     * @var RouteRepository
+     */
+    private $routes;
+
+    /**
      * @var Location
      */
     private $location;
 
     public function __construct(
         CategoryRepository $categories,
-        Location $location
+        Location $location,
+        RouteRepository $routes
     )
     {
         $this->categories = $categories;
+        $this->routes = $routes;
         $this->location = $location;
     }
 
@@ -54,7 +62,10 @@ class LocationsController extends Controller
     public function create()
     {
         return response()->json([
-            'categories' => $this->categories->all()
+            'categories' => $this->categories->all(),
+            //'routes' => $this->routes
+            //                ->orderBy('created_at', 'desc')
+            //                ->all() // TODO сделать вывод маршрутов только текущего юзера
         ]);
     }
 

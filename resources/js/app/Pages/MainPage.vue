@@ -17,6 +17,7 @@
 
         <AddLocationModal
             :categories="this.$store.state.locations.categories"
+            :routes="this.$store.state.routes.routes"
         ></AddLocationModal>
 
         <ViewLocationModal
@@ -60,6 +61,7 @@ export default {
     },
     created() {
         this.$store.dispatch("locations/create", {});
+        this.$store.dispatch("routes/getRoutes", {});
     },
     data() {
         return {

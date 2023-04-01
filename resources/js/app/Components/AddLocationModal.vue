@@ -42,7 +42,14 @@
                         <div class="row-tags">
                             <div class="tag" v-for="tag in tags">{{ tag }}</div>
                         </div>
-                        <button class="btn" onclick="openModal('create-route-and-add-location-modal')">Добавить в маршрут</button>
+                        <div v-if="routes.length > 0" class="form-row">
+                            <select class="input-text" v-model="route">
+                                <option value="">Выберите маршрут для локации</option>
+                                <option v-for="route in routes" :value="route.id">{{ route.name }}</option>
+                            </select>
+                        </div>
+                        <button v-if="routes.length === 0" class="btn" onclick="openModal('create-route-and-add-location-modal')">Добавить в маршрут (не обязательно)</button>
+                        <button v-if="routes.length > 0 && route === ''" class="btn" onclick="openModal('create-route-and-add-location-modal')">Создать новый маршрут</button>
                         <button class="btn" type="button" @click="submit">Создать локацию</button>
                     </form>
                 </div>
@@ -127,11 +134,14 @@ export default {
         NetworkStatusMixin
     ],
     props: {
-        categories: Array
+        categories: Array,
+        routes: Array
     },
     computed: {
         isLoading() {
-            return this.$store.getters['locations/loading'] || this.$store.getters['locations_images/loading'];
+            return this.$store.getters['locations/loading']
+                || this.$store.getters['locations_images/loading']
+                || this.$store.getters['routes/loading'];
         },
     },
     data() {
@@ -150,12 +160,14 @@ export default {
             tags: [],
 
             createdRoute: '',
+            route: '',
 
             params: {
                 title: '',
                 description: '',
                 category: null,
                 images: [],
+                route: '',
                 tags: [],
             },
             errors: null,
@@ -242,6 +254,7 @@ export default {
             this.params.title = this.title;
             this.params.description = this.description;
             this.params.category = this.category;
+            this.params.route = this.route;
             this.params.images = this.imagesToUploadPaths;
             this.params.tags = this.tags;
 
@@ -295,10 +308,16 @@ export default {
             window.ADD_LOCATION_COORDS_GLOBAL = [];
         },
 
-        submitCreatedRoute(route_data) {
+        submitCreatedRoute(route_name) {
+            let route_data = {
+                name: route_name
+            };
+
             this.$store.dispatch(`routes/store`, route_data).then(
                 success => {
-
+                    closeModal('create-route-and-add-location-modal');
+                    this.$store.dispatch("routes/getRoutes", {});
+                    this.route = this.$store.getters['routes/storedRouteId'];
                 },
                 error => {
                     this.errors = error; // TODO обработать через миксим

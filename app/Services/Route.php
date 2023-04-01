@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
 
+use App\Repository\RouteRepository;
 use App\Services\FunctionResult as Result;
 
 class Route
@@ -24,6 +25,15 @@ class Route
     )
     {
         $this->routes = $routes;
+    }
+
+    public function all(): Result
+    {
+        $routes = $this->routes
+                    ->orderBy('created_at', 'desc')
+                    ->get(); // TODO сделать вывод маршрутов только текущего юзера
+
+        return Result::success($routes);
     }
 
     public function store(array $data): Result

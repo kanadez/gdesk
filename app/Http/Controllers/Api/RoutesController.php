@@ -32,7 +32,12 @@ class RoutesController extends Controller
 
     public function index()
     {
+        $all_routes_result = $this->route->all();
 
+        return response()->json([
+            'status' => $all_routes_result->success,
+            'routes' => $all_routes_result->returnValue
+        ]);
     }
 
     /**

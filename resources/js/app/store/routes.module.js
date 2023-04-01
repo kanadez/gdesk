@@ -2,7 +2,7 @@ import RoutesService from '../services/routes.service';
 
 const init = {
     loading: false,
-    routes: null,
+    routes: [],
     storedRouteId: null,
     categories: [],
     routeData: {},
@@ -113,8 +113,8 @@ export const routes = {
         stopLoading(state) {
             state.loading = false;
         },
-        getRoutesSuccess(state, routes) {
-            state.routes = routes;
+        getRoutesSuccess(state, data) {
+            state.routes = data.routes;
         },
         getRoutesFailure(state) {
             state.routes = null;
@@ -126,10 +126,10 @@ export const routes = {
             state.routeData = null;
         },
         createRouteSuccess(state, data) {
-            state.categories = data.categories;
+
         },
         createRouteFailure(state) {
-            state.userCreateFormData = null;
+
         },
         storeRouteSuccess(state, data) {
             state.storedRouteId = data.route_id;

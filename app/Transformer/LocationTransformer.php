@@ -34,8 +34,8 @@ class LocationTransformer extends BaseTransformer
             'title' => $location->title,
             'images' => $images_presented['data'],
             'category' => $location->category->category->name,
+            'route' => !empty($location->route) ? $location->route->route->name : '',
             'tags' => $tags_presented['data'],
-            'description' => $location->description,
             'description' => $location->description,
         ];
     }

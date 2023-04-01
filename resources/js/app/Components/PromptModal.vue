@@ -11,7 +11,7 @@
                     <div class="text-title">{{ title }}</div>
                     <div class="label">{{ message }}:</div>
                     <div class="form-row">
-                        <input class="input-text" type="text" placeholder="" v-model="route_data.name">
+                        <input class="input-text" type="text" placeholder="" v-model="prompt_input">
                     </div>
                     <button v-if="secondary" class="btn secondary" @click="action" type="button">{{ action_text }}</button>
                     <button v-else class="btn" @click="action" type="button">{{ action_text }}</button>
@@ -39,14 +39,13 @@ export default {
     computed: {},
     data() {
         return {
-            route_data: {
-                name: '',
-            }
+            prompt_input: '',
         }
     },
     methods: {
         action(){
-            this.$emit('action', this.route_data);
+            this.$emit('action', this.prompt_input);
+            this.prompt_input = '';
         }
     },
 

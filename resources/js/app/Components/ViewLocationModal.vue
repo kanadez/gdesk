@@ -23,7 +23,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="modal__close relative" onclick="closeModal('view-lacation')"><img src="images/icon/i-close.svg">
+                    <div class="modal__close relative" @click="onModalClose" onclick="closeModal('view-lacation')"><img src="images/icon/i-close.svg">
                     </div>
                     <div class="location">
                         <div class="location__name">{{ title }}</div>
@@ -36,6 +36,8 @@
                         </div>
                         <div class="text-title">Описание</div>
                         <div class="text">{{ description }}</div>
+                        <div v-if="route != ''" class="text-title">Маршрут</div>
+                        <div v-if="route != ''" class="text">{{ route }}</div>
                         <div class="text">
                             <span style="margin-right: 5px" v-for="tag in tags">{{ tag.name }}</span>
                         </div>
@@ -142,6 +144,7 @@ export default {
                     const newValue = record.target.getAttribute(changedAttrName);
 
                     if (newValue.includes('_active')) {
+                        this.clearForm();
                         this.locationId = window.current_opened_location_id;
                         this.editItem();
                     } else {
@@ -169,6 +172,7 @@ export default {
             title: '',
             description: '',
             category: '',
+            route: '',
             images: [],
             tags: [],
 
@@ -205,6 +209,7 @@ export default {
             this.title = location_data.title;
             this.description = location_data.description;
             this.category = location_data.category;
+            this.route = location_data.route;
             this.images = location_data.images;
             this.tags = location_data.tags;
         },
@@ -213,9 +218,14 @@ export default {
             this.title = '';
             this.description = '';
             this.category = '';
+            this.route = '';
             this.images = [];
             this.tags = [];
         },
+
+        onModalClose() {
+
+        }
 
     },
 

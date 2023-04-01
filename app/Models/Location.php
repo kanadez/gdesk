@@ -10,7 +10,6 @@ namespace App\Models;
 
 use App\Models\LocationImage;
 use App\Models\LocationCategory;
-use App\Models\Location;
 
 class Location extends BaseModel
 {
@@ -37,5 +36,10 @@ class Location extends BaseModel
     public function tags()
     {
         return $this->hasMany(LocationTag::class);
+    }
+
+    public function route()
+    {
+        return $this->hasOne(LocationRoute::class);
     }
 }

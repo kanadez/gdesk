@@ -129,7 +129,7 @@ export const locations = {
             state.categories = data.categories;
         },
         createLocationFailure(state) {
-            state.userCreateFormData = null;
+
         },
         storeLocationSuccess(state, data) {
             state.storedLocationId = data.location_id;

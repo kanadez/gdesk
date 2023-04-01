@@ -21,6 +21,7 @@ class CreateLocationRequest extends FormRequest
     {
         return [
             'category' => 'required|integer|exists:categories,id',
+            'route' => 'nullable|integer|exists:routes,id',
             'description' => 'required|string|max:255',
             'images' => 'required|array|min:1',
             'tags'    => 'required|array|min:1',

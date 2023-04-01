@@ -48,6 +48,8 @@ Route::group([
     'prefix'    => "routes",
     'as'        => 'routes.',
 ], function (Router $router) {
+    $router->post('/', [RoutesController::class, 'index'])
+        ->name('routes-index');
     $router->post('/store', [RoutesController::class, 'store'])
         ->name('routes-store');
 });

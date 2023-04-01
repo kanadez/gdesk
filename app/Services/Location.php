@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\LocationCategory;
+use App\Models\LocationRoute;
 use App\Models\LocationTag;
 use App\Models\User;
 use App\Models\LocationImage;
@@ -36,7 +37,7 @@ class Location
     public function edit(int $id): Result
     {
         $location = $this->locations
-                            ->with(['images', 'category.category', 'tags'])
+                            ->with(['images', 'category.category', 'tags', 'route'])
                             ->setPresenter(LocationPresenter::class)
                             ->find($id);
 
@@ -54,6 +55,13 @@ class Location
         $new_category->location_id = $created_location->id;
         $new_category->category_id = $data['category'];
         $new_category->save();
+
+        if (!empty($data['route'])) {
+            $new_route = new LocationRoute();
+            $new_route->location_id = $created_location->id;
+            $new_route->route_id = $data['route'];
+            $new_route->save();
+        }
 
         foreach ($data['images'] as $image) {
             $new_image = new LocationImage();
