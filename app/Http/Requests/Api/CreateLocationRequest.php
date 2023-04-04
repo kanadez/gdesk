@@ -22,11 +22,11 @@ class CreateLocationRequest extends FormRequest
         return [
             'category' => 'required|integer|exists:categories,id',
             'route' => 'nullable|integer|exists:routes,id',
-            'description' => 'required|string|max:255',
+            'description' => 'required|string|max:1000',
             'images' => 'required|array|min:1',
             'tags'    => 'required|array|min:1',
             'tags.*'  => 'required|string|distinct|min:3',
-            'title' => 'required|string|max:100',
+            'title' => 'required|string|max:255',
         ];
     }
 }
