@@ -12,10 +12,10 @@
                     <form onsubmit="return false">
                         <div class="form-row">
                             <input class="input-text" v-model="title" maxlength="255" type="text"
-                                   placeholder="Название локации">
+                                   v-on:keydown.enter.prevent="$refs.category_select.focus()" placeholder="Название локации">
                         </div>
                         <div class="form-row">
-                            <select v-model="category" class="input-text">
+                            <select ref="category_select" v-model="category" class="input-text">
                                 <option value="">Выбрать категорию</option>
                                 <option v-for="(category, index) in categories" :value="category.id">{{ category.name }}
                                 </option>
@@ -222,8 +222,8 @@ export default {
 
             this.$store.dispatch(`locations_images/upload`, data).then(
                 success => {
-                    this.imagesToUploadPaths = this.$store.state.locations_images.imagesPaths
-                    this.imagesToUpload = [];
+                    this.imagesToUploadPaths = this.imagesToUploadPaths.concat(this.$store.state.locations_images.imagesPaths);
+                    this.imagesToUpload = []; // здесь так и надо очищать, даже если грузят по одному изображ., т к если не очищать будут грузиться загруженные до этого по второму разу
                 },
                 error => {
                     this.imagesToUpload = [];
@@ -245,6 +245,8 @@ export default {
 
         addTag(event) {
             event.preventDefault();
+
+            if (this.addTagInputValue.length === 0) return false;
 
             this.tags.push(this.addTagInputValue);
             this.addTagInputValue = '';
@@ -296,6 +298,7 @@ export default {
             this.addTagInputValue = '';
             this.tags = [];
             this.createdRoute = '';
+            this.route = '';
 
             this.params = {
                 title: '',
@@ -303,6 +306,7 @@ export default {
                 category: null,
                 images: [],
                 tags: [],
+                route: '',
             };
 
             window.ADD_LOCATION_COORDS_GLOBAL = [];
