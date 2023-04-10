@@ -21,12 +21,22 @@ class LocationImageUploader
 
         foreach ($images as $image) {
             $image_content =  file_get_contents($image->getRealPath());
+            $image_file_ext= 'jpg';
+
+            switch ($image->getMimeType()) {
+                case 'image/png':
+                    $image_file_ext = 'png';
+                break;
+                case 'image/jpeg':
+                    $image_file_ext = 'jpg';
+                break;
+            }
 
             if ($image_content === false) {
                 $result = Result::error(Lang::get('errors.not_all_images_were_uploaded'));
             } else {
                 $new_file_name = time().uniqid(rand());
-                $file_path = "locations/images/$new_file_name.jpg";
+                $file_path = "locations/images/$new_file_name.$image_file_ext";
                 $store_result = Storage::disk('public')->put($file_path, $image_content);
 
                 if ($store_result === false) {

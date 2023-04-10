@@ -30,7 +30,7 @@
                                 <div v-for="image in previewImages" class="add-photo__item"><img :src="image"></div>
                             </div>
                             <div class="input-file">
-                                <input id="input-file" type="file" accept=".jpg,.jpeg," multiple
+                                <input id="input-file" type="file" accept=".jpg,.jpeg,.png" multiple
                                        @change="uploadImages($event)">
                                 <label for="input-file">Загрузить фото</label>
                             </div>
@@ -210,7 +210,7 @@ export default {
                 };
             }
 
-            if (this.imagesToUpload.length === 0) return false;
+            //if (this.imagesToUpload.length === 0) return false;
             if (this.isSending) return;
             this.errors = null;
             this.isSending = true;
@@ -246,7 +246,7 @@ export default {
         addTag(event) {
             event.preventDefault();
 
-            if (this.addTagInputValue.length === 0) return false;
+            if (this.addTagInputValue.length < 2) return false;
 
             this.tags.push(this.addTagInputValue);
             this.addTagInputValue = '';
