@@ -1,85 +1,30 @@
 <template>
-    <div class="modal-backdrop modal-full" id="search">
+    <div class="modal-backdrop modal-full" id="search-location">
         <div class="modal">
             <div class="modal__body">
                 <div class="modal__header">
-                    <div :onclick="`closeModal('${id}')`" class="modal__close"><img src="images/icon/i-close.svg">
+                    <div :onclick="`closeModal('search-location')`" class="modal__close">
+                        <img src="images/icon/i-close.svg">
                     </div>
                 </div>
-                <div class="label">Выберите категорию, затем локацию в списке</div>
-                <div class="slider">
-                    <div class="owl-carousel tag-slider"><a class="tag" href="#">тег 1</a><a class="tag" href="#">тег
-                        2</a><a class="tag" href="#">тег 3</a><a class="tag" href="#">тег 1 тег 3 тег 3</a></div>
+                <div class="label">Введите поисковый запрос</div>
+                <div class="form-row">
+                    <input v-on:keydown.enter.prevent="submitQuery" v-model="searchQueryInputValue" class="input-text"
+                           type="text" placeholder='Например, "инстаместа" или "куда сводить девушку"'>
                 </div>
+                <div class="label">Или выберите категорию:</div>
+                <div class="slider">
+                    <div class="owl-carousel tag-slider">
+                        <a v-for="category in categories" class="tag" href="#">{{ category.name }}</a>
+                    </div>
+                </div>
+                <div class="label">Самые популярные маршруты:</div>
                 <div class="category">
                     <div class="category__list">
-                        <div class="category__item">
+                        <div v-for="route in routes" class="category__item">
                             <div class="category__img"></div>
                             <div class="category__text">
-                                <div class="category__title">Название</div>
-                                <span>Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum</span>
-                            </div>
-                        </div>
-                        <div class="category__item">
-                            <div class="category__img"></div>
-                            <div class="category__text">
-                                <div class="category__title">Название</div>
-                                <span>Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum</span>
-                            </div>
-                        </div>
-                        <div class="category__item">
-                            <div class="category__img"></div>
-                            <div class="category__text">
-                                <div class="category__title">Название</div>
-                                <span>Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum</span>
-                            </div>
-                        </div>
-                        <div class="category__item">
-                            <div class="category__img"></div>
-                            <div class="category__text">
-                                <div class="category__title">Название</div>
-                                <span>Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum</span>
-                            </div>
-                        </div>
-                        <div class="category__item">
-                            <div class="category__img"></div>
-                            <div class="category__text">
-                                <div class="category__title">Название</div>
-                                <span>Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum</span>
-                            </div>
-                        </div>
-                        <div class="category__item">
-                            <div class="category__img"></div>
-                            <div class="category__text">
-                                <div class="category__title">Название</div>
-                                <span>Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum</span>
-                            </div>
-                        </div>
-                        <div class="category__item">
-                            <div class="category__img"></div>
-                            <div class="category__text">
-                                <div class="category__title">Название</div>
-                                <span>Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum</span>
-                            </div>
-                        </div>
-                        <div class="category__item">
-                            <div class="category__img"></div>
-                            <div class="category__text">
-                                <div class="category__title">Название</div>
-                                <span>Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum</span>
-                            </div>
-                        </div>
-                        <div class="category__item">
-                            <div class="category__img"></div>
-                            <div class="category__text">
-                                <div class="category__title">Название</div>
-                                <span>Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum</span>
-                            </div>
-                        </div>
-                        <div class="category__item">
-                            <div class="category__img"></div>
-                            <div class="category__text">
-                                <div class="category__title">Название</div>
+                                <div class="category__title">{{ route.name }}</div>
                                 <span>Давно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum</span>
                             </div>
                         </div>
@@ -98,16 +43,50 @@ import Errors from "../UI/Errors";
 export default {
     name: "SearchModal",
     components: {Errors},
-    props: {},
+    props: {
+        categories: Array,
+        routes: Array
+    },
     computed: {},
     data() {
         return {
             isSending: false,
-            params: {},
+
+            searchQueryInputValue: '',
+            selectedCategory: '',
+
+            params: {
+                query: '',
+                category: ''
+            },
             errors: null,
         }
     },
-    methods: {},
+    methods: {
+
+        submitQuery() {
+            this.params.query = this.searchQueryInputValue;
+            this.params.category = this.selectedCategory;
+
+            this.$store.dispatch(`search/find`, this.params).then(
+                success => {
+
+                },
+                error => {
+                    this.errors = error; // TODO обработать через миксим
+                    this.errorModalData = this.handleError(error);
+                    openModal('error-modal');
+                }
+            ).catch(error => {
+                this.errors = error;
+                this.errorModalData = this.handleError(error);
+                openModal('error-modal');
+            }).finally(() => {
+                this.isSending = false;
+            });
+        },
+
+    },
 
     created() {
 

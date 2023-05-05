@@ -10,9 +10,13 @@ namespace App\Models;
 
 use App\Models\LocationImage;
 use App\Models\LocationCategory;
+use Laravel\Scout\Searchable;
 
 class Location extends BaseModel
 {
+
+    use Searchable;
+
     protected $table = "locations";
 
     protected $fillable = [

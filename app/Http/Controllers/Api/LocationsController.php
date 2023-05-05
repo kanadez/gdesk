@@ -63,9 +63,9 @@ class LocationsController extends Controller
     {
         return response()->json([
             'categories' => $this->categories->all(),
-            //'routes' => $this->routes
-            //                ->orderBy('created_at', 'desc')
-            //                ->all() // TODO сделать вывод маршрутов только текущего юзера
+            'popular_routes' => $this->routes
+                                    ->orderBy('created_at', 'desc')
+                                    ->all()
         ]);
     }
 

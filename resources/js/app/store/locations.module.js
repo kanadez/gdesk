@@ -5,6 +5,7 @@ const init = {
     locations: null,
     storedLocationId: null,
     categories: [],
+    popularRoutes: [],
     locationData: {},
 }
 
@@ -127,6 +128,7 @@ export const locations = {
         },
         createLocationSuccess(state, data) {
             state.categories = data.categories;
+            state.popularRoutes = data.popular_routes;
         },
         createLocationFailure(state) {
 

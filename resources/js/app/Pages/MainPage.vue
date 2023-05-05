@@ -13,7 +13,10 @@
             </div>
         </div>
 
-        <SearchModal></SearchModal>
+        <SearchModal
+            :categories="this.$store.state.locations.categories"
+            :routes="this.$store.state.locations.popularRoutes"
+        ></SearchModal>
 
         <AddLocationModal
             :categories="this.$store.state.locations.categories"

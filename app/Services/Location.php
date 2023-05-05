@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Lang;
+use Laravel\Scout\Searchable;
 
 use App\Presenter\LocationPresenter;
 

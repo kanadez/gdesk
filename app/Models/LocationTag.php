@@ -9,8 +9,13 @@
 namespace App\Models;
 
 
+use Laravel\Scout\Searchable;
+
 class LocationTag extends BaseModel
 {
+
+    use Searchable;
+
     protected $table = "locations_tags";
 
     protected $fillable = [

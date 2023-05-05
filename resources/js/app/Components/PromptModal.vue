@@ -7,7 +7,7 @@
                     <div :onclick="`closeModal('${id}')`" class="modal__close"><img src="images/icon/i-close.svg">
                     </div>
                 </div>
-                <form>
+                <form @submit.prevent="action">
                     <div class="text-title">{{ title }}</div>
                     <div class="label">{{ message }}:</div>
                     <div class="form-row">

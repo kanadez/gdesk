@@ -11,7 +11,7 @@
                         <div class="title">Название</div>
                     </div>
                     <div class="header__right">
-                        <a class="a-header toggler" href="javascript:;" data-target="search"><img src="images/icon/i-search.svg"></a>
+                        <a class="a-header toggler" href="javascript:;" data-target="search-location"><img src="images/icon/i-search.svg"></a>
                     </div>
                 </div>
             </div>

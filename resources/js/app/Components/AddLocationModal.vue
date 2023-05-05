@@ -30,7 +30,7 @@
                                 <div v-for="image in previewImages" class="add-photo__item"><img :src="image"></div>
                             </div>
                             <div class="input-file">
-                                <input id="input-file" type="file" accept=".jpg,.jpeg,.png" multiple
+                                <input id="input-file" type="file" accept=".jpg,.jpeg,.png," multiple
                                        @change="uploadImages($event)">
                                 <label for="input-file">Загрузить фото</label>
                             </div>
@@ -63,12 +63,6 @@
             message="Запрос на создание локации успешно отправлен. Мы посмотрим и добавим локацию на карту, если всё хорошо."
         ></SuccessModal>
 
-        <ErrorModal
-            id="error-modal"
-            :title=errorModalData.title
-            :message=errorModalData.message
-        ></ErrorModal>
-
         <InfoModal
             id="add-location-upload-count-limit-warning-modal"
             title="Предупреждение"
@@ -98,6 +92,12 @@
             @action="submitCreatedRoute"
             secondary="true"
         ></PromptModal>
+
+        <ErrorModal
+            id="error-modal"
+            :title=errorModalData.title
+            :message=errorModalData.message
+        ></ErrorModal>
 
         <loading v-model:active="isLoading"
                  :can-cancel="false"
@@ -180,6 +180,8 @@ export default {
     },
     methods: {
         uploadImages(event) {
+            console.log(event)
+
             if (this.previewImages.length >= MAX_IMAGES_UPLOAD) {
                 openModal('add-location-upload-count-limit-warning-modal');
 
