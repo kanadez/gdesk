@@ -87,10 +87,10 @@ export default {
             return (this.searchQueryInputValue !== '' || this.selectedCategory !== '') && this.searchPerformed === true;
         },
         resultsNotEmpty() {
-            return this.$store.getters['search/finded'] != null && this.$store.getters['search/finded'].length > 0;
+            return this.$store.getters['search/finded'] != null && Object.keys(this.$store.getters['search/finded']).length > 0;
         },
         resultsEmpty() {
-            return this.$store.getters['search/finded'] == null || this.$store.getters['search/finded'].length === 0;
+            return this.$store.getters['search/finded'] === null || Object.keys(this.$store.getters['search/finded']).length === 0;
         },
         isLoading() {
             return this.$store.getters['search/loading'];

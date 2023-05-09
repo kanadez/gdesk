@@ -36,6 +36,7 @@ export const search = {
         },
         findSuccess(state, finded) {
             state.finded = finded.results;
+            console.log(state.finded)
         },
         findFailure(state) {
             state.finded = [];
