@@ -2,7 +2,7 @@ import SearchService from '../services/search.service';
 
 const init = {
     loading: false,
-    search: null,
+    finded: [],
 }
 
 export const search = {
@@ -34,16 +34,16 @@ export const search = {
         stopLoading(state) {
             state.loading = false;
         },
-        findSuccess(state, search) {
-            state.search = search;
+        findSuccess(state, finded) {
+            state.finded = finded.results;
         },
         findFailure(state) {
-            state.search = null;
+            state.finded = [];
         },
     },
     getters: {
-        search: (state) => {
-            return state.search;
+        finded: (state) => {
+            return state.finded;
         },
         loading: (state) => {
             return state.loading;

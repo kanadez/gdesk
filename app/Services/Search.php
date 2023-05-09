@@ -2,25 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\LocationCategory;
-use App\Models\LocationRoute;
-use App\Models\LocationTag;
-use App\Models\User;
-use App\Models\LocationImage;
-
 use App\Repository\CategoryRepository;
 use App\Repository\RouteRepository;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Lang;
-
-use App\Presenter\LocationPresenter;
 
 use App\Services\FunctionResult as Result;
 
 use App\Repository\LocationRepository;
 use App\Models\Location;
+use App\Models\LocationTag;
 
 class Search
 {
@@ -53,9 +42,32 @@ class Search
 
     public function find(array $data)
     {
-        $finded = Location::search($data['query'])->get();
+        $finded_locations = Location::search($data['query'])->query(function ($builder) {
+            $builder->with('route.route');
+        })->get();// TODO пагинировать
+        $finded_tags = LocationTag::search($data['query'])->query(function ($builder) {
+            $builder->with('locations.route.route');
+        })->get();// TODO пагинировать
 
-        return Result::success($finded);
+        $merged_results = [];
+
+        foreach ($finded_tags as $tag) {
+            foreach ($tag->locations as $location) {
+                if (!empty($location->route)) {
+                    $merged_results[] = $location->route->route->toArray();
+                }
+            }
+        }
+
+        foreach ($finded_locations as $location) {
+            if (!empty($location->route)) {
+                $merged_results[] = $location->route->route->toArray();
+            }
+        }
+
+        $uniqued_results = array_unique($merged_results, SORT_REGULAR);
+
+        return Result::success($uniqued_results);
     }
 
 }

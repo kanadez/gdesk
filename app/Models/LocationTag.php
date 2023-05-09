@@ -26,4 +26,9 @@ class LocationTag extends BaseModel
         "updated_at",
     ];
 
+    public function locations()
+    {
+        return $this->hasMany('App\Models\Location', 'id', 'location_id');
+    }
+
 }
