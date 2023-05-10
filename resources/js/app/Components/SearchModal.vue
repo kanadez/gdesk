@@ -12,7 +12,7 @@
                     <input
                         v-on:keydown.enter.prevent="submitQuery"
                         v-model="searchQueryInputValue"
-                        @keyup="queryTypingStarted"
+                        @keydown="queryTypingStarted"
                         class="input-text"
                         type="text" placeholder='Например, "инстаместа" или "куда сводить девушку"'
                     >
@@ -37,7 +37,7 @@
                     </div>
                 </div>
 
-                <div v-if="isQueryAnswered && resultsEmpty" class="label no-search-results">
+                <div v-if="!isQueryAnswering && isQueryAnswered && resultsEmpty" class="label no-search-results">
                     По вашему запросу ничего не найдено!
                     <br><a href="javascript:void(0)" @click="clearSearchForm">Показать самые популярные маршруты</a>
                 </div>
