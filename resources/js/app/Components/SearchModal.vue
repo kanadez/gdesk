@@ -37,7 +37,7 @@
                     </div>
                 </div>
 
-                <div v-if="!isQueryAnswering && isQueryAnswered && resultsEmpty" class="label no-search-results">
+                <div v-if="isQueryAnswered && resultsEmpty" class="label no-search-results">
                     По вашему запросу ничего не найдено!
                     <br><a href="javascript:void(0)" @click="clearSearchForm">Показать самые популярные маршруты</a>
                 </div>
