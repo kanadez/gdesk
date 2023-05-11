@@ -10,7 +10,7 @@ namespace App\Http\Requests\Api;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SearchLocationRequest extends FormRequest
+class SearchByQueryRequest extends FormRequest
 {
     public function authorize()
     {
@@ -20,8 +20,7 @@ class SearchLocationRequest extends FormRequest
     public function rules()
     {
         return [
-            'category' => 'nullable|string|max:1000',
-            'query' => 'nullable|string|max:1000',
+            'query' => 'required|string|max:100',
         ];
     }
 }

@@ -28,4 +28,9 @@ class LocationCategory extends BaseModel
         return $this->hasOne('App\Models\Category', 'id', 'category_id');
     }
 
+    public function locations()
+    {
+        return $this->hasMany(Location::class, 'id', 'location_id');
+    }
+
 }

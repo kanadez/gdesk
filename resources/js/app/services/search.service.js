@@ -2,8 +2,19 @@ const SEARCH_API_URL = '/api/search';
 
 class SearchService {
 
-    find(params) {
-        return axios.post(SEARCH_API_URL, params).then(
+    findByQuery(params) {
+        return axios.post(SEARCH_API_URL + '/query', params).then(
+            (response) => {
+                return Promise.resolve(response.data);
+            },
+            (error) => {
+                return Promise.reject(error);
+            }
+        );
+    }
+
+    findByCategory(params) {
+        return axios.post(SEARCH_API_URL + '/category', params).then(
             (response) => {
                 return Promise.resolve(response.data);
             },

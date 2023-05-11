@@ -17,6 +17,7 @@ class YMapsJQuery {
                 center: [59.944600, 30.367062],
                 zoom: 15
             }, {
+                autoFitToViewport: 'always',
                 searchControlProvider: 'yandex#search'
             }),
 

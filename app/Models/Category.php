@@ -8,6 +8,7 @@
 
 namespace App\Models;
 
+use App\Models\LocationCategory;
 
 class Category extends BaseModel
 {
@@ -21,4 +22,8 @@ class Category extends BaseModel
         "updated_at",
     ];
 
+    public function location_category()
+    {
+        return $this->hasMany(LocationCategory::class);
+    }
 }

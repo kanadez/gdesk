@@ -79,7 +79,6 @@ main {
   width: 100%;
   height: 100%;
   max-width: 560px;
-  padding: 0 20px;
   margin: 0 auto;
   position: relative;
 }
@@ -421,6 +420,7 @@ textarea.input-text {
   background: #ffffff;
   font-weight: 600;
   font-size: 36px;
+    opacity: .3;
 
 }
 

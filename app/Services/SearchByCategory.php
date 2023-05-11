@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\LocationCategory;
 use App\Repository\CategoryRepository;
 use App\Repository\RouteRepository;
 
@@ -11,7 +12,7 @@ use App\Repository\LocationRepository;
 use App\Models\Location;
 use App\Models\LocationTag;
 
-class Search
+class SearchByCategory
 {
 
     /**
@@ -42,26 +43,17 @@ class Search
 
     public function find(array $data)
     {
-        $finded_locations = Location::search($data['query'])->query(function ($builder) {
-            $builder->with('route.route');
-        })->get();// TODO пагинировать
-        $finded_tags = LocationTag::search($data['query'])->query(function ($builder) {
-            $builder->with('locations.route.route');
-        })->get();// TODO пагинировать
+        $category = $this->categories
+                        ->with('location_category.locations.route.route')
+                        ->find($data['category']);
 
         $merged_results = [];
 
-        foreach ($finded_tags as $tag) {
-            foreach ($tag->locations as $location) {
+        foreach ($category->location_category as $category_locations) {
+            foreach ($category_locations->locations as $location) {
                 if (!empty($location->route)) {
                     $merged_results[] = $location->route->route->toArray();
                 }
-            }
-        }
-
-        foreach ($finded_locations as $location) {
-            if (!empty($location->route)) {
-                $merged_results[] = $location->route->route->toArray();
             }
         }
 

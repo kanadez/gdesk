@@ -6,7 +6,8 @@ use Illuminate\Routing\Router;
 use App\Http\Controllers\Api\YMapsMarkerController;
 use App\Http\Controllers\Api\LocationsController;
 use App\Http\Controllers\Api\RoutesController;
-use App\Http\Controllers\Api\SearchController;
+use App\Http\Controllers\Api\SearchByQueryController;
+use App\Http\Controllers\Api\SearchByCategoryController;
 use App\Http\Controllers\Api\LocationsImagesController;
 
 /*
@@ -35,8 +36,10 @@ Route::group([
     'prefix'    => "search",
     'as'        => 'search.',
 ], function (Router $router) {
-    $router->post('/', [SearchController::class, 'index'])
-        ->name('search-index');
+    $router->post('/query', [SearchByQueryController::class, 'index'])
+        ->name('search-by-query');
+    $router->post('/category', [SearchByCategoryController::class, 'index'])
+        ->name('search-by-category');
 });
 
 Route::group([

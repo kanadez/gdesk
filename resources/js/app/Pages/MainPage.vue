@@ -3,14 +3,14 @@
     <div class="container">
         <div class="main">
             <YMap></YMap>
-            <div class="circle-drop">
+            <!--<div class="circle-drop">
                 <a class="circle-drop__link js-circle-drop" href="javascript:;"><img src="images/icon/i-add.svg"></a>
                 <div class="circle-drop__menu">
                     <a href="#"><img src="images/icon/i-route.svg"></a>
                     <a href="#"><img src="images/icon/i-markers.svg"></a>
                     <a class="toggler" href="javascript:;" data-target="add-lacation"><img src="images/icon/i-marker.svg"></a>
                 </div>
-            </div>
+            </div>-->
         </div>
 
         <SearchModal

@@ -9,9 +9,25 @@ export const search = {
     namespaced: true,
     state: init,
     actions: {
-        find({commit}, params) {
+        findByQuery({commit}, params) {
             commit('startLoading');
-            return SearchService.find(params).then(
+            return SearchService.findByQuery(params).then(
+                data => {
+                    commit('stopLoading');
+                    commit('findSuccess', data);
+                    return Promise.resolve(true);
+                },
+                error => {
+                    commit('stopLoading', false);
+                    commit('findFailure');
+                    return Promise.reject(error);
+                }
+            );
+        },
+
+        findByCategory({commit}, params) {
+            commit('startLoading');
+            return SearchService.findByCategory(params).then(
                 data => {
                     commit('stopLoading');
                     commit('findSuccess', data);

@@ -20,7 +20,11 @@
                 <div class="label">Или выберите категорию:</div>
                 <div class="slider">
                     <div class="owl-carousel tag-slider">
-                        <a v-for="category in categories" class="tag" href="#">{{ category.name }}</a>
+                        <a
+                            v-for="category in categories"
+                            @click="selectCategory(category.id)"
+                            class="tag" href="#"
+                        >{{ category.name }}</a>
                     </div>
                 </div>
 
@@ -104,10 +108,6 @@ export default {
             selectedCategory: '',
             searchPerformed: false,
 
-            params: {
-                query: '',
-                category: ''
-            },
             errors: null,
         }
     },
@@ -118,10 +118,39 @@ export default {
         },
 
         submitQuery() {
-            this.params.query = this.searchQueryInputValue;
-            this.params.category = this.selectedCategory;
+            this.params = {
+                query: this.searchQueryInputValue
+            };
 
-            this.$store.dispatch(`search/find`, this.params).then(
+            this.$store.dispatch(`search/findByQuery`, this.params).then(
+                success => {
+                    this.searchPerformed = true;
+                },
+                error => {
+                    this.errors = error; // TODO обработать через миксим
+                    this.errorModalData = this.handleError(error);
+                    openModal('error-modal');
+                }
+            ).catch(error => {
+                this.errors = error;
+                this.errorModalData = this.handleError(error);
+                openModal('error-modal');
+            }).finally(() => {
+                this.isSending = false;
+            });
+        },
+
+        selectCategory(category_id) {
+            this.selectedCategory = category_id;
+            this.submitCategory();
+        },
+
+        submitCategory(category_id) {
+            this.params = {
+                category: this.selectedCategory
+            };
+
+            this.$store.dispatch(`search/findByCategory`, this.params).then(
                 success => {
                     this.searchPerformed = true;
                 },

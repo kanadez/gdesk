@@ -12,28 +12,28 @@ use App\Http\Controllers\Controller;
 use App\Repository\RouteRepository;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Api\SearchLocationRequest;
+use App\Http\Requests\Api\SearchByCategoryRequest;
 
 use App\Repository\CategoryRepository;
 
-use App\Services\Search;
+use App\Services\SearchByCategory;
 
-class SearchController extends Controller
+class SearchByCategoryController extends Controller
 {
 
     /**
-     * @var Search
+     * @var SearchByCategory
      */
     private $search;
 
     public function __construct(
-        Search $search
+        SearchByCategory $search
     )
     {
         $this->search = $search;
     }
 
-    public function index(SearchLocationRequest $request)
+    public function index(SearchByCategoryRequest $request)
     {
         $search_result = $this->search->find($request->validated());
 
