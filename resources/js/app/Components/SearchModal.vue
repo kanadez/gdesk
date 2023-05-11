@@ -21,6 +21,10 @@
                 <div class="slider">
                     <div class="owl-carousel tag-slider">
                         <a
+                            @click="clearSearchForm"
+                            class="tag" href="#"
+                        >Популярное</a>
+                        <a
                             v-for="category in categories"
                             @click="selectCategory(category.id)"
                             class="tag" href="#"
