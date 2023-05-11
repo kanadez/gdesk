@@ -114,6 +114,7 @@ export default {
     methods: {
 
         queryTypingStarted() {
+            this.selectedCategory = '';
             this.searchPerformed = false;
         },
 
