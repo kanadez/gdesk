@@ -35,7 +35,11 @@
                 <div v-if="!isQueryAnswering && isQueryAnswered && resultsNotEmpty" class="label">Найдено по вашему запросу:</div>
                 <div v-if="!isQueryAnswering && isQueryAnswered && resultsNotEmpty" class="category">
                     <div class="category__list">
-                        <div v-for="route in $store.getters['search/finded']" class="category__item">
+                        <div
+                            v-for="route in $store.getters['search/finded']"
+                            @click="openRouteOnMap(route.id)"
+                            class="category__item"
+                        >
                             <div class="category__img"></div>
                             <div class="category__text">
                                 <div class="category__title">{{ route.name }}</div>
@@ -53,7 +57,11 @@
                 <div v-if="!isQueryAnswering && !isQueryAnswered" class="label">Самые популярные маршруты:</div>
                 <div v-if="!isQueryAnswering && !isQueryAnswered" class="category">
                     <div class="category__list">
-                        <div v-for="route in routes" class="category__item">
+                        <div
+                            v-for="route in routes"
+                            @click="openRouteOnMap(route.id)"
+                            class="category__item"
+                        >
                             <div class="category__img"></div>
                             <div class="category__text">
                                 <div class="category__title">{{ route.name }}</div>
@@ -66,6 +74,12 @@
         </div>
         <div class="mask-modal -show"></div>
 
+        <ErrorModal
+            id="error-modal"
+            :title=errorModalData.title
+            :message=errorModalData.message
+        ></ErrorModal>
+
         <loading v-model:active="isLoading"
                  :can-cancel="false"
                  :is-full-page="true"/>
@@ -75,14 +89,20 @@
 <script>
 
 import Errors from "../UI/Errors";
+import ErrorModal from "../Components/ErrorModal";
 import Loading from 'vue-loading-overlay';
+import {NetworkStatusMixin} from "../Mixins/network-status-mixin";
 
 export default {
     name: "SearchModal",
     components: {
         Errors,
+        ErrorModal,
         Loading
     },
+    mixins: [
+        NetworkStatusMixin
+    ],
     props: {
         categories: Array,
         routes: Array
@@ -113,6 +133,11 @@ export default {
             searchPerformed: false,
 
             errors: null,
+
+            errorModalData: {
+                title: '',
+                message: ''
+            }
         }
     },
     methods: {
@@ -177,6 +202,23 @@ export default {
             this.searchQueryInputValue = '';
             this.selectedCategory = '';
             this.searchPerformed = false;
+        },
+
+        openRouteOnMap(route_id) {
+            this.$store.commit('search/startLoading');
+
+            ymapsmarkers.addMarkersGroup(route_id)
+            .then(response => {
+                this.$store.commit('search/stopLoading');
+                closeModal('search-location');
+            })
+            .catch(error => {
+                console.log(error)
+                this.$store.commit('search/stopLoading');
+                this.errors = error;
+                this.errorModalData = {title: 'Ошибка', message: 'Что-то пошло не так, попробуйте другой маршрут.'};
+                openModal('error-modal');
+            });
         }
 
     },

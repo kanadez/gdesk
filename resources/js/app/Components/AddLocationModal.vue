@@ -266,8 +266,8 @@ export default {
                 success => {
                     // Создаем и сохраняем маркер на карте
                     let location_id = this.$store.getters['locations/storedLocationId'];
-                    ymapsjq.addMarker(location_id, window.ADD_LOCATION_COORDS_GLOBAL);
-                    ymapsjq.saveMarker(location_id, window.ADD_LOCATION_COORDS_GLOBAL);
+                    ymapsmarkers.addMarker(location_id, window.ADD_LOCATION_COORDS_GLOBAL);
+                    ymapsmarkers.saveMarker(location_id, window.ADD_LOCATION_COORDS_GLOBAL);
 
                     // Завершаем создание локации
                     this.resetData();

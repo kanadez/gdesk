@@ -46,4 +46,9 @@ class Location extends BaseModel
     {
         return $this->hasOne(LocationRoute::class);
     }
+
+    public function ymaps_marker()
+    {
+        return $this->hasOne(YMapsMarker::class);
+    }
 }

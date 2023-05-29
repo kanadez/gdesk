@@ -22,4 +22,9 @@ class Route extends BaseModel
         "updated_at",
     ];
 
+    public function route_locations()
+    {
+        return $this->hasMany(LocationRoute::class);
+    }
+
 }

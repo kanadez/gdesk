@@ -26,8 +26,8 @@ export default {
     methods: {
 
         initYMap() {
-            ymapsjq.init()
-            window.testJQuery = this.testJQuery // вызывать прямо процедурно из любого места testJQuery()
+            ymapsjq.init();
+            window.testJQuery = this.testJQuery; // вызывать прямо процедурно из любого места testJQuery()
         },
 
         testJQuery() {
@@ -40,7 +40,7 @@ export default {
 <style scoped>
 
 #map {
-    width: 100%; height: 100vh; padding: 0; margin: 0;
+    width: 100%; height: 90vh; padding: 0; margin: 0;
 }
 
 </style>

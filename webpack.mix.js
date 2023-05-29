@@ -29,6 +29,7 @@ mix.js('resources/js/app.js', 'public/js')
         'resources/css/footer/footer.scss',
         'resources/css/style/owl.scss',
         'resources/css/style/style.scss',
+        'resources/css/style/ymaps.scss',
     ], 'public/css/all.combined.scss')
     .copy('resources/fonts/', 'public/fonts')
     .copy('resources/images/', 'public/images')

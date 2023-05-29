@@ -1,0 +1,71 @@
+/**
+ * Yandex Maps custom styles
+ */
+
+.ymaps-float-button {
+    background-color: #fff;
+    border-color: transparent;
+    box-shadow: 0 1px 2px 1px rgba(0,0,0,.15), 0 2px 5px -3px rgba(0,0,0,.15);
+    box-sizing: border-box!important;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 3px;
+    background-clip: border-box;
+    color: #000;
+    vertical-align: middle;
+    text-decoration: none;
+    font-family: Arial,Helvetica,sans-serif;
+    cursor: pointer;
+    -webkit-transition: background-color .15s ease-out,border-color .15s ease-out,opacity .15s ease-out;
+    transition: background-color .15s ease-out,border-color .15s ease-out,opacity .15s ease-out;
+    display: inline-block;
+    text-align: left;
+    height: 28px;
+    padding: 5px;
+}
+
+.ymaps-text-container {
+    font-family: Arial;
+    font-size: 12px;
+    font-weight: 400;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+}
+
+.ymaps-listbox-panel {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 10px 20px -5px rgba(0,0,0,.2)!important;
+    display: block;
+    /* float: right; */
+    /* right: 7px; */
+    padding: 3px 0;
+    /* position: relative; */
+    z-index: 1000;
+}
+
+.ymaps-listbox-list-item {
+    display: block;
+    white-space: nowrap;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.ymaps-list-item-text {
+    box-sizing: border-box!important;
+    font-size: 12px;
+    line-height: 25px;
+    max-width: 250px;
+    overflow: hidden;
+    padding-left: 5px;
+    padding-right: 5px;
+    position: relative;
+    text-overflow: ellipsis;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

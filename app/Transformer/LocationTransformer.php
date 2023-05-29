@@ -32,6 +32,7 @@ class LocationTransformer extends BaseTransformer
         return [
             'id' => $location->id,
             'title' => $location->title,
+            'ymaps_marker' => $location->ymaps_marker,
             'images' => $images_presented['data'],
             'category' => $location->category->category->name,
             'route' => !empty($location->route) ? $location->route->route->name : '',

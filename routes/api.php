@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Routing\Router;
 use App\Http\Controllers\Api\YMapsMarkerController;
+use App\Http\Controllers\Api\YMapsMarkersRouteController;
 use App\Http\Controllers\Api\LocationsController;
 use App\Http\Controllers\Api\RoutesController;
 use App\Http\Controllers\Api\SearchByQueryController;
@@ -26,8 +27,9 @@ Route::group([
     'as'        => 'ymaps.',
 ], function (Router $router) {
     $router->get('/markers', [YMapsMarkerController::class, 'index'])
-        ->name('ymaps-markers-index');
-
+        ->name('ymaps-markers-index'); // TODO в будущем вообще убрать возможность вывода всех маркеров подряд
+    $router->get('/markers/route/{route_id}', [YMapsMarkersRouteController::class, 'index'])
+        ->name('ymaps-markers-route');
     $router->post('/markers/store', [YMapsMarkerController::class, 'create'])
         ->name('ymaps-markers-store');
 });

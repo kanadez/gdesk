@@ -15,22 +15,27 @@
                         primaryColor="#f3f3f3"
                         secondaryColor="#bfbfbf"
                     >
-                        <rect x="2" y="9" rx="2" ry="2" width="468" height="229" />
+                        <rect x="2" y="9" rx="2" ry="2" width="468" height="229"/>
                     </ContentLoader>
                     <div v-else class="slider">
                         <div class="owl-carousel img-slider">
-                            <div v-for="image in images" class="slider__item toggler" data-target="slider"><img :src="image.image_path">
+                            <div v-for="image in images" class="slider__item toggler" data-target="slider"><img
+                                :src="image.image_path">
                             </div>
                         </div>
                     </div>
-                    <div class="modal__close relative" @click="onModalClose" onclick="closeModal('view-lacation')"><img src="images/icon/i-close.svg">
+                    <div class="modal__close relative" @click="onModalClose" onclick="closeModal('view-lacation')"><img
+                        src="images/icon/i-close.svg">
                     </div>
                     <div class="location">
                         <div class="location__name">{{ title }}</div>
                         <div class="location__category">{{ category }}</div>
                         <div class="rating">
-                            <div class="star-row"><img src="images/icon/star.svg"><img src="images/icon/star.svg"><img src="images/icon/star.svg"><img src="images/icon/star.svg"><img src="images/icon/star0.svg">
-                            </div><span>4.0</span>
+                            <div class="star-row"><img src="images/icon/star.svg"><img src="images/icon/star.svg"><img
+                                src="images/icon/star.svg"><img src="images/icon/star.svg"><img
+                                src="images/icon/star0.svg">
+                            </div>
+                            <span>4.0</span>
                         </div>
                         <div class="location__distance"><img src="images/icon/i-run.svg"><span>30 мин 2,6км</span>
                         </div>
@@ -41,21 +46,32 @@
                         <div class="text">
                             <span style="margin-right: 5px" v-for="tag in tags">{{ tag.name }}</span>
                         </div>
-                        <a class="btn" href="#">Редактировать локацию</a><a class="btn" href="#">Добавить в группу / маршрут</a><a class="btn" href="#">Закрыть</a>
+                        <a class="btn" :href="ymapsRouteUrl">Построить сюда маршрут от меня</a>
+                        <a class="btn" href="#">Редактировать локацию</a>
+                        <a class="btn" href="#">Добавить в группу / маршрут</a>
+                        <a class="btn" href="#">Закрыть</a>
                         <div class="location__info">
                             <div class="rating-info"><span>4.0</span>
                                 <div>
-                                    <div class="star-row"><img src="images/icon/star.svg"><img src="images/icon/star.svg"><img src="images/icon/star.svg"><img src="images/icon/star.svg"><img src="images/icon/star0.svg">
-                                    </div><small>10 оценок</small>
+                                    <div class="star-row"><img src="images/icon/star.svg"><img
+                                        src="images/icon/star.svg"><img src="images/icon/star.svg"><img
+                                        src="images/icon/star.svg"><img src="images/icon/star0.svg">
+                                    </div>
+                                    <small>10 оценок</small>
                                 </div>
                             </div>
                             <div class="estimate"><small>Были здесь? поставь оценку</small>
-                                <div class="estimate__star"><a href="#"><img src="images/icon/star0.svg"></a><a href="#"><img src="images/icon/star0.svg"></a><a href="#"><img src="images/icon/star0.svg"></a><a href="#"><img src="images/icon/star0.svg"></a><a href="#"><img src="images/icon/star0.svg"></a></div>
+                                <div class="estimate__star"><a href="#"><img src="images/icon/star0.svg"></a><a
+                                    href="#"><img src="images/icon/star0.svg"></a><a href="#"><img
+                                    src="images/icon/star0.svg"></a><a href="#"><img src="images/icon/star0.svg"></a><a
+                                    href="#"><img src="images/icon/star0.svg"></a></div>
                             </div>
                         </div>
-                        <div class="btn toggler" data-target="comment-lacation"><img src="images/icon/i-comment.svg">Написать отзыв
+                        <div class="btn toggler" data-target="comment-lacation"><img src="images/icon/i-comment.svg">
+                            Написать отзыв
                         </div>
-                        <div class="btn toggler" data-target="delete-lacation"><img src="images/icon/i-trash.svg">Удалить локацию
+                        <div class="btn toggler" data-target="delete-lacation"><img src="images/icon/i-trash.svg">
+                            Удалить локацию
                         </div>
                     </div>
                 </div>
@@ -104,7 +120,7 @@ import ErrorModal from "../Components/ErrorModal";
 import InfoModal from "../Components/InfoModal";
 import {NetworkStatusMixin} from "../Mixins/network-status-mixin";
 import Loading from 'vue-loading-overlay';
-import { ContentLoader } from 'vue-content-loader'
+import {ContentLoader} from 'vue-content-loader'
 //import 'vue-loading-overlay/dist/css/index.css';
 
 const MAX_IMAGES_UPLOAD = 6;
@@ -140,7 +156,7 @@ export default {
                 // In this case if the type of mutation is of attribute run the following block.
                 // A mutation could have several types.
                 if (record.type === 'attributes' && record.attributeName === 'class') {
-                    const changedAttrName  = record.attributeName;
+                    const changedAttrName = record.attributeName;
                     const newValue = record.target.getAttribute(changedAttrName);
 
                     if (newValue.includes('_active')) {
@@ -175,6 +191,7 @@ export default {
             route: '',
             images: [],
             tags: [],
+            ymapsRouteUrl: '',
 
             errors: null,
             errorModalData: {
@@ -212,6 +229,16 @@ export default {
             this.route = location_data.route;
             this.images = location_data.images;
             this.tags = location_data.tags;
+            ymapsrouting.buildRouteUrl([location_data.ymaps_marker.lat,location_data.ymaps_marker.lng])
+            .then(response => {
+                this.ymapsRouteUrl = response;
+            })
+            .catch(error => {
+                console.log(error)
+                this.errors = error;
+                this.errorModalData = {title: 'Ошибка', message: 'Что-то пошло не так, попробуйте другую локацию.'};
+                openModal('error-modal');
+            });
         },
 
         clearForm() {

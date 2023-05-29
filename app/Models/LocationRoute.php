@@ -28,4 +28,9 @@ class LocationRoute extends BaseModel
         return $this->hasOne('App\Models\Route', 'id', 'route_id');
     }
 
+    public function location()
+    {
+        return $this->hasOne(Location::class, 'id', 'location_id');
+    }
+
 }

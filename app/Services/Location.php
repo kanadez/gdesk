@@ -38,7 +38,7 @@ class Location
     public function edit(int $id): Result
     {
         $location = $this->locations
-                            ->with(['images', 'category.category', 'tags', 'route'])
+                            ->with(['images', 'category.category', 'tags', 'route', 'ymaps_marker'])
                             ->setPresenter(LocationPresenter::class)
                             ->find($id);
 
