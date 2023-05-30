@@ -263,7 +263,7 @@ class YMapsRouting {
         // Создаем мультимаршрут и настраиваем его внешний вид с помощью опций.
         this.multiRoute = new ymaps.multiRouter.MultiRoute({
             referencePoints: referencePointsSorted,
-            params: {viaIndexes: viaIndexes}
+            params: {viaIndexes: viaIndexes, routingMode: 'masstransit'}
         }, {
             // Внешний вид путевых точек.
             wayPointStartIconColor: "#333",
@@ -436,7 +436,7 @@ class YMapsRouting {
             }),
             new ymaps.control.ListBoxItem({
                 data: {
-                    content: 'На транспорте',
+                    content: 'На автобусе',
                     mode: 'masstransit',
                 }
             })
@@ -446,7 +446,7 @@ class YMapsRouting {
         var listBox = new ymaps.control.ListBox({
             items: listBoxItems,
             data: {
-                title: 'Как передвигаться'
+                title: 'На автобусе'
             },
             options: {
                 // С помощью опций можно задать как макет непосредственно для списка,
