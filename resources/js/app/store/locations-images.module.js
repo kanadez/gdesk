@@ -5,7 +5,7 @@ const init = {
     imagesPaths: [],
 }
 
-export const locations_images = {
+export const locationsImages = {
     namespaced: true,
     state: init,
     actions: {

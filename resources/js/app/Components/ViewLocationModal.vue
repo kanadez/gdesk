@@ -144,7 +144,7 @@ export default {
     },
     computed: {
         isLoading() {
-            return this.$store.getters['locations/loading'] || this.$store.getters['locations_images/loading'];
+            return this.$store.getters['locations/loading'] || this.$store.getters['locationsImages/loading'];
         },
     },
     mounted() {

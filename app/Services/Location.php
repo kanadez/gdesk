@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\LocationCategory;
 use App\Models\LocationRoute;
 use App\Models\LocationTag;
+use App\Models\LocationTagLocation;
 use App\Models\User;
 use App\Models\LocationImage;
 
@@ -38,7 +39,7 @@ class Location
     public function edit(int $id): Result
     {
         $location = $this->locations
-                            ->with(['images', 'category.category', 'tags', 'route', 'ymaps_marker'])
+                            ->with(['images', 'category.category', 'tags.tag', 'route', 'ymaps_marker'])
                             ->setPresenter(LocationPresenter::class)
                             ->find($id);
 
@@ -72,10 +73,26 @@ class Location
         }
 
         foreach ($data['tags'] as $tag) {
-            $new_tag = new LocationTag();
-            $new_tag->location_id = $created_location->id;
-            $new_tag->tag = $tag;
-            $new_tag->save();
+            $existing_tag = LocationTag::select('id')->where('tag', $tag)->first();
+
+            if (empty($existing_tag)) {
+                $new_tag = new LocationTag();
+                $new_tag->location_id = $created_location->id; // TODO избавиться здесь и в базе через миграции
+                $new_tag->tag = $tag;
+                $new_tag->save();
+
+                $new_tag_location = new LocationTagLocation();
+                $new_tag_location->location_id = $created_location->id;
+                $new_tag_location->tag_id = $new_tag->id;
+                $new_tag_location->save();
+            } else {
+                $new_tag_location = new LocationTagLocation();
+                $new_tag_location->location_id = $created_location->id;
+                $new_tag_location->tag_id = $existing_tag->id;
+                $new_tag_location->save();
+            }
+
+
         }
 
         return Result::success($created_location->id);

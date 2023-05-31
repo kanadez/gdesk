@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\YMapsMarkerController;
 use App\Http\Controllers\Api\YMapsMarkersRouteController;
 use App\Http\Controllers\Api\LocationsController;
 use App\Http\Controllers\Api\RoutesController;
+use App\Http\Controllers\Api\SearchTagsController;
 use App\Http\Controllers\Api\SearchByQueryController;
 use App\Http\Controllers\Api\SearchByCategoryController;
 use App\Http\Controllers\Api\LocationsImagesController;
@@ -66,4 +67,12 @@ Route::group([
         ->name('routes-index');
     $router->post('/store', [RoutesController::class, 'store'])
         ->name('routes-store');
+});
+
+Route::group([
+    'prefix'    => "tags",
+    'as'        => 'tags.',
+], function (Router $router) {
+    $router->post('/find', [SearchTagsController::class, 'index'])
+        ->name('tags-search');
 });

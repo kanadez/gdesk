@@ -9,6 +9,7 @@
 namespace App\Transformer;
 
 use App\Models\LocationTag;
+use App\Models\LocationTagLocation;
 use Illuminate\Support\Carbon;
 
 class LocationTagTransformer extends BaseTransformer
@@ -19,10 +20,10 @@ class LocationTagTransformer extends BaseTransformer
      * @return array
      * @throws \Exception
      */
-    public function transform(LocationTag $tag)
+    public function transform(LocationTagLocation $tag_location)
     {
         return [
-            'name' => $tag->tag
+            'name' => $tag_location->tag->tag
         ];
     }
 }

@@ -36,8 +36,12 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <input v-on:keydown.enter.prevent="addTag" v-model="addTagInputValue" class="input-text"
+                            <input v-on:keydown.enter.prevent="addTag" v-on:keyup="searchTags" v-model="addTagInputValue"
+                                   class="input-text" ref="add_tag_input_value"
                                    type="text" placeholder="Хештеги (введите по одному, нажимая Enter)">
+                        </div>
+                        <div class="form-row" v-for="tag_finded in tagsFinded" :key="tag_finded">
+                            <p style="padding: 5px"><a href="javascript:void(0)" @click="insertTagSuggestion(tag_finded.tag)">{{ tag_finded.tag }}</a></p>
                         </div>
                         <div class="row-tags">
                             <div class="tag" v-for="tag in tags">{{ tag }}</div>
@@ -140,9 +144,15 @@ export default {
     computed: {
         isLoading() {
             return this.$store.getters['locations/loading']
-                || this.$store.getters['locations_images/loading']
+                || this.$store.getters['locationsImages/loading']
                 || this.$store.getters['routes/loading'];
         },
+        areTagsFinded() {
+            return this.$store.getters['searchTags/finded'].length > 0;
+        },
+        tagsFinded() {
+            return this.$store.getters['searchTags/finded'];
+        }
     },
     data() {
         return {
@@ -172,6 +182,8 @@ export default {
             },
             errors: null,
 
+            tagSearchQuery: '',
+
             errorModalData: {
                 title: '',
                 message: ''
@@ -180,8 +192,6 @@ export default {
     },
     methods: {
         uploadImages(event) {
-            console.log(event)
-
             if (this.previewImages.length >= MAX_IMAGES_UPLOAD) {
                 openModal('add-location-upload-count-limit-warning-modal');
 
@@ -222,9 +232,9 @@ export default {
                 data.append(`file${i}`, this.imagesToUpload[i]);
             }
 
-            this.$store.dispatch(`locations_images/upload`, data).then(
+            this.$store.dispatch(`locationsImages/upload`, data).then(
                 success => {
-                    this.imagesToUploadPaths = this.imagesToUploadPaths.concat(this.$store.state.locations_images.imagesPaths);
+                    this.imagesToUploadPaths = this.imagesToUploadPaths.concat(this.$store.state.locationsImages.imagesPaths);
                     this.imagesToUpload = []; // здесь так и надо очищать, даже если грузят по одному изображ., т к если не очищать будут грузиться загруженные до этого по второму разу
                 },
                 error => {
@@ -252,6 +262,23 @@ export default {
 
             this.tags.push(this.addTagInputValue);
             this.addTagInputValue = '';
+
+            this.$store.commit('searchTags/clearFinded');
+        },
+
+        searchTags() {
+            if (this.addTagInputValue.length < 3) return false;
+
+            let params = {
+                query: this.addTagInputValue
+            };
+            this.$store.dispatch(`searchTags/find`, params);
+        },
+
+        insertTagSuggestion(tag_text) {
+            this.addTagInputValue = tag_text;
+            this.$store.commit('searchTags/clearFinded');
+            this.$refs.add_tag_input_value.focus();
         },
 
         submit() {

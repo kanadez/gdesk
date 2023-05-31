@@ -39,7 +39,7 @@ class Location extends BaseModel
 
     public function tags()
     {
-        return $this->hasMany(LocationTag::class);
+        return $this->hasMany(LocationTagLocation::class);
     }
 
     public function route()
