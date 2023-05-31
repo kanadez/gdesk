@@ -46,15 +46,15 @@ class SearchByQuery
             $builder->with('route.route');
         })->get();// TODO пагинировать
         $finded_tags = LocationTag::search($data['query'])->query(function ($builder) {
-            $builder->with('locations.route.route');
+            $builder->with('tag_locations.location.route.route');
         })->get();// TODO пагинировать
 
         $merged_results = [];
 
         foreach ($finded_tags as $tag) {
-            foreach ($tag->locations as $location) {
-                if (!empty($location->route)) {
-                    $merged_results[] = $location->route->route->toArray();
+            foreach ($tag->tag_locations as $location) {
+                if (!empty($location->location->route)) {
+                    $merged_results[] = $location->location->route->route->toArray();
                 }
             }
         }

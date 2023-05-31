@@ -31,4 +31,9 @@ class LocationTag extends BaseModel
         return $this->hasMany('App\Models\Location', 'id', 'location_id');
     }
 
+    public function tag_locations()
+    {
+        return $this->hasMany('App\Models\LocationTagLocation', 'tag_id', 'id');
+    }
+
 }
