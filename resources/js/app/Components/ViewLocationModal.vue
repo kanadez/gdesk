@@ -39,7 +39,11 @@
                         </div>
                         <div class="location__distance"><img src="images/icon/i-run.svg"><span>30 мин 2,6км</span>
                         </div>
-                        <div class="text-title">Описание</div>
+                        <div class="text-title">
+                            Описание
+                            <span v-if="!isTextPlaying">(<a href="javascript:void(0)" @click="playText(description)">Озвучить голосом</a>)</span>
+                            <span v-if="isTextPlaying">(<a href="javascript:void(0)" @click="pauseText">Стоп</a>)</span>
+                        </div>
                         <div class="text">{{ description }}</div>
                         <div v-if="route != ''" class="text-title">Маршрут</div>
                         <div v-if="route != ''" class="text">{{ route }}</div>
@@ -119,6 +123,7 @@ import SuccessModal from "../Components/SuccessModal";
 import ErrorModal from "../Components/ErrorModal";
 import InfoModal from "../Components/InfoModal";
 import {NetworkStatusMixin} from "../Mixins/network-status-mixin";
+import {TextToSpeechMixin} from "../Mixins/text-to-speech-mixin";
 import Loading from 'vue-loading-overlay';
 import {ContentLoader} from 'vue-content-loader'
 //import 'vue-loading-overlay/dist/css/index.css';
@@ -137,7 +142,8 @@ export default {
         ContentLoader
     },
     mixins: [
-        NetworkStatusMixin
+        NetworkStatusMixin,
+        TextToSpeechMixin
     ],
     props: {
         categories: Array
