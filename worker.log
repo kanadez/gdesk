@@ -25339,3 +25339,5 @@
 [2023-05-31 14:09:49][27] Processing: Laravel\Scout\Jobs\MakeSearchable
 [2023-05-31 14:09:49][26] Processed:  Laravel\Scout\Jobs\MakeSearchable
 [2023-05-31 14:09:49][27] Processed:  Laravel\Scout\Jobs\MakeSearchable
+[2023-06-01 07:09:51][28] Processing: Laravel\Scout\Jobs\MakeSearchable
+[2023-06-01 07:09:51][28] Processed:  Laravel\Scout\Jobs\MakeSearchable

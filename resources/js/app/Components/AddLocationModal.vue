@@ -119,6 +119,7 @@ import InfoModal from "../Components/InfoModal";
 import PromptModal from "../Components/PromptModal";
 import {NetworkStatusMixin} from "../Mixins/network-status-mixin";
 import Loading from 'vue-loading-overlay';
+import {extractIdentifiers} from "@vue/compiler-sfc";
 //import 'vue-loading-overlay/dist/css/index.css';
 
 const MAX_IMAGES_UPLOAD = 6;
@@ -151,7 +152,17 @@ export default {
             return this.$store.getters['searchTags/finded'].length > 0;
         },
         tagsFinded() {
-            return this.$store.getters['searchTags/finded'];
+            let tags_to_show_as_finded = [];
+
+            this.$store.getters['searchTags/finded'].forEach(finded_tag => {
+                let existing_tag = this.tags.find(selected_tag => selected_tag === finded_tag.tag);
+                console.log(finded_tag, existing_tag)
+                if (existing_tag === undefined) {
+                    tags_to_show_as_finded.push(finded_tag);
+                }
+            });
+
+            return tags_to_show_as_finded;
         }
     },
     data() {

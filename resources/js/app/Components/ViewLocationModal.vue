@@ -43,8 +43,8 @@
                         <div class="text">{{ description }}</div>
                         <div v-if="route != ''" class="text-title">Маршрут</div>
                         <div v-if="route != ''" class="text">{{ route }}</div>
-                        <div class="text">
-                            <span style="margin-right: 5px" v-for="tag in tags">{{ tag.name }}</span>
+                        <div class="text" style="word-wrap: break-word">
+                            <span style="margin-right: 5px; position: relative" v-for="tag in tags">{{ tag.name }}</span>
                         </div>
                         <a class="btn" :href="ymapsRouteUrl">Построить сюда маршрут от меня</a>
                         <a class="btn" href="#">Редактировать локацию</a>
