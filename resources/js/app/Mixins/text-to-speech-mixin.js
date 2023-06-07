@@ -20,14 +20,15 @@ let TextToSpeechMixin = {
         playText(text) {
             var msg = new SpeechSynthesisUtterance();
             var voices = speechSynthesis.getVoices();
-            msg.voice = voices[3];
+            //console.log(voices)
+            //msg.voice = voices[27];
             msg.text = text;
             speechSynthesis.speak(msg);
             this.playingNow = true;
         },
 
         pauseText() {
-            speechSynthesis.pause();
+            speechSynthesis.cancel();
             this.playingNow = false;
         },
     }

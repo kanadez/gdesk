@@ -218,6 +218,8 @@ export default {
                 this.errors = error;
                 this.errorModalData = {title: 'Ошибка', message: 'Что-то пошло не так, попробуйте другой маршрут.'};
                 openModal('error-modal');
+            }).finally(() => {
+                this.$store.commit('search/stopLoading');
             });
         }
 

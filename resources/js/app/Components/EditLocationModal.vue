@@ -1,12 +1,12 @@
 <template>
     <div>
 
-        <div class="modal-backdrop modal-full" id="add-lacation">
+        <div class="modal-backdrop modal-full" id="edit-lacation">
             <div class="modal">
                 <div class="modal__body">
                     <div class="header__center">
-                        <div class="title">Создать локацию</div>
-                        <div class="modal__close" onclick="closeModal('add-lacation')"><img src="images/icon/i-close.svg">
+                        <div class="title">Изменить локацию</div>
+                        <div class="modal__close" onclick="closeModal('edit-lacation')"><img src="images/icon/i-close.svg">
                         </div>
                     </div>
                     <form onsubmit="return false">
@@ -30,9 +30,9 @@
                                 <div v-for="image in previewImages" class="add-photo__item"><img :src="image"></div>
                             </div>
                             <div class="input-file">
-                                <input id="add-location-input-file" type="file" accept=".jpg,.jpeg,.png," multiple
+                                <input id="edit-location-input-file" type="file" accept=".jpg,.jpeg,.png," multiple
                                        @change="uploadImages($event)">
-                                <label for="add-location-input-file">Загрузить фото</label>
+                                <label for="edit-location-input-file">Загрузить фото</label>
                             </div>
                         </div>
                         <div class="form-row">
@@ -52,9 +52,9 @@
                                 <option v-for="route in routes" :value="route.id">{{ route.name }}</option>
                             </select>
                         </div>
-                        <button v-if="routes.length === 0" class="btn" onclick="openModal('create-route-and-add-location-modal')">Добавить в маршрут (не обязательно)</button>
-                        <button v-if="routes.length > 0 && route === ''" class="btn" onclick="openModal('create-route-and-add-location-modal')">Создать новый маршрут</button>
-                        <button class="btn" type="button" @click="submit">Создать локацию</button>
+                        <button v-if="routes.length === 0" class="btn" onclick="openModal('create-route-and-edit-location-modal')">Добавить в маршрут (не обязательно)</button>
+                        <button v-if="routes.length > 0 && route === ''" class="btn" onclick="openModal('create-route-and-edit-location-modal')">Создать новый маршрут</button>
+                        <button class="btn" type="button" @click="submit">Сохранить изменения</button>
                     </form>
                 </div>
             </div>
@@ -62,34 +62,34 @@
         </div>
 
         <SuccessModal
-            id="add-location-success-modal"
+            id="edit-location-success-modal"
             title="Запрос отправлен"
-            message="Запрос на создание локации успешно отправлен. Мы посмотрим и добавим локацию на карту, если всё хорошо."
+            message="Запрос на изменение локации успешно отправлен. Мы посмотрим и отредактируем локацию, если всё хорошо."
         ></SuccessModal>
 
         <InfoModal
-            id="add-location-upload-count-limit-warning-modal"
+            id="edit-location-upload-count-limit-warning-modal"
             title="Предупреждение"
             message="Можно загрузить только 6 изображений!"
             secondary="true"
         ></InfoModal>
 
         <InfoModal
-            id="add-location-upload-size-limit-warning-modal"
+            id="edit-location-upload-size-limit-warning-modal"
             title="Предупреждение"
             message="Изображение должно быть не больше 5 мегабайт! Выберите поменьше."
             secondary="true"
         ></InfoModal>
 
         <InfoModal
-            id="add-location-upload-size-limit-warning-modal"
+            id="edit-location-upload-size-limit-warning-modal"
             title="Предупреждение"
             message="Изображение должно быть не больше 5 мегабайт! Выберите поменьше."
             secondary="true"
         ></InfoModal>
 
         <PromptModal
-            id="create-route-and-add-location-modal"
+            id="create-route-and-edit-location-modal"
             title="Создать маршрут"
             message='Введите название нового маршрута и нажмите "Добавить локацию"'
             action_text="Добавить локацию в маршрут"
@@ -98,7 +98,7 @@
         ></PromptModal>
 
         <ErrorModal
-            id="add-error-modal"
+            id="edit-error-modal"
             :title=errorModalData.title
             :message=errorModalData.message
         ></ErrorModal>
@@ -169,10 +169,12 @@ export default {
         return {
             isSending: false,
 
+            locationId: null,
             title: '',
             description: '',
             category: '',
 
+            images: [],
             previewImages: [],
             imagesToUpload: [],
             imagesToUploadPaths: [],
@@ -185,6 +187,7 @@ export default {
             route: '',
 
             params: {
+                id: null,
                 title: '',
                 description: '',
                 category: null,
@@ -200,17 +203,95 @@ export default {
             }
         }
     },
+    mounted() {
+        const observer = new MutationObserver((mutationsList, observer) => {
+            mutationsList.forEach(record => {
+                // In each iteration an individual mutation can be accessed.
+                //console.log(record);
+
+                // In this case if the type of mutation is of attribute run the following block.
+                // A mutation could have several types.
+                if (record.type === 'attributes' && record.attributeName === 'class') {
+                    const changedAttrName = record.attributeName;
+                    const newValue = record.target.getAttribute(changedAttrName);
+
+                    if (newValue.includes('_active')) {
+                        this.resetData();
+                        this.locationId = window.current_opened_location_id;
+                        this.editItem();
+                    } else {
+                        this.locationId = window.current_opened_location_id = null;
+                    }
+                }
+            });
+        });
+
+        // A list to be used as a target below.
+        const list = document.querySelector('#view-lacation');
+
+        // This is the code that tells MutationObserver what to keep an eye on.
+        // In this case it is the list targeted earlier and
+        // it will only observe changes to attributes of the elements such as class, id or any other attribute.
+        observer.observe(list, {
+            attributes: true
+        });
+    },
     methods: {
+        editItem() {
+            this.errors = null;
+            this.$store.dispatch('locations/edit', {id: this.locationId}).then(
+                success => {
+                    this.fillForm();
+                },
+                error => {
+                    this.errors = error.response.data;
+                    this.$notify({
+                        title: "Error",
+                        type: 'error',
+                        text: this.handleError(error),
+                    });
+                    console.log(this.errors);
+                }
+            ).catch(error => {
+
+            });
+        },
+
+        fillForm() {
+            let location_data = this.$store.getters['locations/locationEditData'];
+            this.title = location_data.title;
+            this.description = location_data.description;
+            this.category = location_data.category.id;
+            this.route = location_data.route.id;
+            this.images = location_data.images;
+            this.previewImages = location_data.images.map(image => image.image_path);
+            this.tags = location_data.tags.map(tag => tag.name);
+            ymapsrouting.buildRouteUrl([location_data.ymaps_marker.lat,location_data.ymaps_marker.lng])
+                .then(response => {
+                    this.ymapsRouteUrl = response;
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.errors = error;
+                    this.errorModalData = {title: 'Ошибка', message: 'Что-то пошло не так, попробуйте другую локацию.'};
+                    openModal('edit-error-modal');
+                });
+        },
+
+        onModalClose() {
+
+        },
+
         uploadImages(event) {
             if (this.previewImages.length >= MAX_IMAGES_UPLOAD) {
-                openModal('add-location-upload-count-limit-warning-modal');
+                openModal('edit-location-upload-count-limit-warning-modal');
 
                 return false;
             }
 
             for (let i = 0; i < event.target.files.length; i++) {
                 if (this.imagesToUpload.length >= MAX_IMAGES_UPLOAD) {
-                    openModal('add-location-upload-count-limit-warning-modal');
+                    openModal('edit-location-upload-count-limit-warning-modal');
 
                     continue;
                 }
@@ -218,7 +299,7 @@ export default {
                 const image = event.target.files[i];
 
                 if (image.size > MAX_FILE_SIZE) {
-                    openModal('add-location-upload-size-limit-warning-modal');
+                    openModal('edit-location-upload-size-limit-warning-modal');
 
                     continue;
                 }
@@ -252,14 +333,14 @@ export default {
                     this.previewImages = [];
                     this.errors = error;
                     this.errorModalData = this.handleError(error);
-                    openModal('add-error-modal');
+                    openModal('edit-error-modal');
                 }
             ).catch(error => {
                 this.imagesToUpload = [];
                 this.previewImages = [];
                 this.errors = error;
                 this.errorModalData = this.handleError(error);
-                openModal('add-error-modal');
+                openModal('edit-error-modal');
             }).finally(() => {
                 this.isSending = false;
             });
@@ -292,6 +373,7 @@ export default {
         },
 
         submit() {
+            this.params.id = this.locationId;
             this.params.title = this.title;
             this.params.description = this.description;
             this.params.category = this.category;
@@ -299,27 +381,24 @@ export default {
             this.params.images = this.imagesToUploadPaths;
             this.params.tags = this.tags;
 
-            this.$store.dispatch(`locations/store`, this.params).then(
+            this.$store.dispatch(`locations/update`, this.params).then(
                 success => {
-                    // Создаем и сохраняем маркер на карте
-                    let location_id = this.$store.getters['locations/storedLocationId'];
-                    ymapsmarkers.addMarker(location_id, window.ADD_LOCATION_COORDS_GLOBAL);
-                    ymapsmarkers.saveMarker(location_id, window.ADD_LOCATION_COORDS_GLOBAL);
-
                     // Завершаем создание локации
                     this.resetData();
                     closeCurrentModal();
-                    openModal('add-location-success-modal');
+                    closeModal('view-lacation');
+                    openModal('view-lacation');
+                    openModal('edit-location-success-modal');
                 },
                 error => {
                     this.errors = error; // TODO обработать через миксим
                     this.errorModalData = this.handleError(error);
-                    openModal('add-error-modal');
+                    openModal('edit-error-modal');
                 }
             ).catch(error => {
                 this.errors = error;
                 this.errorModalData = this.handleError(error);
-                openModal('add-error-modal');
+                openModal('edit-error-modal');
             }).finally(() => {
                 this.isSending = false;
             });
@@ -328,28 +407,31 @@ export default {
         resetData() {
             this.isSending = false;
 
+            this.locationId = null;
             this.title = '';
             this.description = '';
-            this.category = null;
+            this.category = '';
 
+            this.images = [];
             this.previewImages = [];
             this.imagesToUpload = [];
             this.imagesToUploadPaths = [];
 
+            this.tagSearchQuery = '';
             this.addTagInputValue = '';
             this.tags = [];
-            this.tagSearchQuery = '';
 
             this.createdRoute = '';
             this.route = '';
 
             this.params = {
+                id: null,
                 title: '',
                 description: '',
                 category: null,
                 images: [],
-                tags: [],
                 route: '',
+                tags: [],
             };
 
             window.ADD_LOCATION_COORDS_GLOBAL = [];
@@ -362,19 +444,19 @@ export default {
 
             this.$store.dispatch(`routes/store`, route_data).then(
                 success => {
-                    closeModal('create-route-and-add-location-modal');
+                    closeModal('create-route-and-edit-location-modal');
                     this.$store.dispatch("routes/getRoutes", {});
                     this.route = this.$store.getters['routes/storedRouteId'];
                 },
                 error => {
                     this.errors = error; // TODO обработать через миксим
                     this.errorModalData = this.handleError(error);
-                    openModal('add-error-modal');
+                    openModal('edit-error-modal');
                 }
             ).catch(error => {
                 this.errors = error;
                 this.errorModalData = this.handleError(error);
-                openModal('add-error-modal');
+                openModal('edit-error-modal');
             }).finally(() => {
                 this.isSending = false;
             });

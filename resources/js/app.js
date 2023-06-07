@@ -19,6 +19,8 @@ import {createApp} from "vue";
 import router from "./app/router";
 import store from "./app/store";
 
+
+
 const app = createApp(Gdesk)
     .use(router)
     .use(store).mount('#app')

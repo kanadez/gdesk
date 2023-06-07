@@ -11,11 +11,11 @@ namespace App\Presenter;
 use App\Transformer\LocationShowTransformer;
 use Prettus\Repository\Presenter\FractalPresenter;
 
-class LocationPresenter extends FractalPresenter
+class LocationShowPresenter extends FractalPresenter
 {
 
     /**
-     * @returs LocationTransformer|\League\Fractal\TransformerAbstract
+     * @returs LocationShowTransformer|\League\Fractal\TransformerAbstract
      * @throws \Exception
      */
     public function getTransformer()

@@ -23,7 +23,8 @@ class LocationTagTransformer extends BaseTransformer
     public function transform(LocationTagLocation $tag_location)
     {
         return [
-            'name' => $tag_location->tag->tag
+            'id' => (int) $tag_location->tag->id,
+            'name' => (string) $tag_location->tag->tag
         ];
     }
 }

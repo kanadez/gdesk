@@ -122,6 +122,8 @@ class YMapsMarkers {
                     var markers_existing = data.data;
                     var markers_coords = [];
 
+                    if (markers_existing.length === 0) reject("Что-то пошло не так. Попробуйте другой маршрут.");;
+
                     markers_existing.forEach(marker => {
                         if (marker === null) return false;
 

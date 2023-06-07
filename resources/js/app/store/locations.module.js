@@ -6,7 +6,8 @@ const init = {
     storedLocationId: null,
     categories: [],
     popularRoutes: [],
-    locationData: {},
+    locationShowData: {},
+    locationEditData: {},
 }
 
 export const locations = {
@@ -56,6 +57,22 @@ export const locations = {
                 error => {
                     commit('stopLoading');
                     commit('storeLocationFailure');
+                    return Promise.reject(error);
+                }
+            );
+        },
+
+        show({commit}, params) {
+            commit('startLoading');
+            return LocationsService.showLocation(params).then(
+                data => {
+                    commit('stopLoading');
+                    commit('showLocationSuccess', data);
+                    return Promise.resolve(true);
+                },
+                error => {
+                    commit('stopLoading');
+                    commit('showLocationFailure');
                     return Promise.reject(error);
                 }
             );
@@ -121,10 +138,16 @@ export const locations = {
             state.locations = null;
         },
         editLocationSuccess(state,  data) {
-            state.locationData = data.location.data;
+            state.locationEditData = data.location.data;
         },
         editLocationFailure(state) {
-            state.locationData = null;
+            state.locationEditData = null;
+        },
+        showLocationSuccess(state,  data) {
+            state.locationShowData = data.location.data;
+        },
+        showLocationFailure(state) {
+            state.locationShowData = null;
         },
         createLocationSuccess(state, data) {
             state.categories = data.categories;
@@ -144,8 +167,11 @@ export const locations = {
         locations: (state) => {
             return state.locations;
         },
-        locationData: (state) => {
-            return state.locationData;
+        locationEditData: (state) => {
+            return state.locationEditData;
+        },
+        locationShowData: (state) => {
+            return state.locationShowData;
         },
         storedLocationId: (state) => {
             return state.storedLocationId;

@@ -8,18 +8,18 @@
 
 namespace App\Presenter;
 
-use App\Transformer\LocationShowTransformer;
+use App\Transformer\LocationEditTransformer;
 use Prettus\Repository\Presenter\FractalPresenter;
 
-class LocationPresenter extends FractalPresenter
+class LocationEditPresenter extends FractalPresenter
 {
 
     /**
-     * @returs LocationTransformer|\League\Fractal\TransformerAbstract
+     * @returs LocationEditTransformer|\League\Fractal\TransformerAbstract
      * @throws \Exception
      */
     public function getTransformer()
     {
-        return new LocationShowTransformer();
+        return new LocationEditTransformer();
     }
 }

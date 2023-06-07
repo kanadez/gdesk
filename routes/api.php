@@ -49,12 +49,16 @@ Route::group([
     'prefix'    => "locations",
     'as'        => 'locations.',
 ], function (Router $router) {
+    $router->get('/{id}/show', [LocationsController::class, 'show'])
+        ->name('locations-show');
     $router->get('/{id}/edit', [LocationsController::class, 'edit'])
         ->name('locations-edit');
     $router->get('/create', [LocationsController::class, 'create'])
         ->name('locations-create');
     $router->post('/store', [LocationsController::class, 'store'])
         ->name('locations-store');
+    $router->post('{id}/update', [LocationsController::class, 'update'])
+        ->name('locations-update');
     $router->post('/images/upload', [LocationsImagesController::class, 'store'])
         ->name('locations-images-upload');
 });

@@ -27,6 +27,11 @@
             :categories="this.$store.state.locations.categories"
         ></ViewLocationModal>
 
+        <EditLocationModal
+            :categories="this.$store.state.locations.categories"
+            :routes="this.$store.state.routes.routes"
+        ></EditLocationModal>
+
         <loading v-model:active="loading"
                  :can-cancel="false"
                  :is-full-page="true"/>
@@ -45,11 +50,13 @@ import 'vue-loading-overlay/dist/css/index.css';
 
 import AddLocationModal from "../Components/AddLocationModal";
 import ViewLocationModal from "../Components/ViewLocationModal";
+import EditLocationModal from "../Components/EditLocationModal";
 
 export default {
     name: "MainPage",
     components: {
         ViewLocationModal,
+        EditLocationModal,
         Errors,
         Button,
         Input,

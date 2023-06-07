@@ -22,7 +22,7 @@ class LocationImageTransformer extends BaseTransformer
     public function transform(LocationImage $image)
     {
         return [
-            'image_path' => "storage/$image->image_path"
+            'image_path' => (string) "storage/$image->image_path"
         ];
     }
 }

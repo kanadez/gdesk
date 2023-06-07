@@ -51,9 +51,9 @@
                             <span style="margin-right: 5px; position: relative" v-for="tag in tags">{{ tag.name }}</span>
                         </div>
                         <a class="btn" :href="ymapsRouteUrl">Построить сюда маршрут от меня</a>
-                        <a class="btn" href="#">Редактировать локацию</a>
+                        <a class="btn" href="#" @click="openEditLocationModal">Редактировать локацию</a>
                         <a class="btn" href="#">Добавить в группу / маршрут</a>
-                        <a class="btn" href="#">Закрыть</a>
+                        <a class="btn" onclick="closeModal('view-lacation')" href="#">Закрыть</a>
                         <div class="location__info">
                             <div class="rating-info"><span>4.0</span>
                                 <div>
@@ -83,31 +83,11 @@
             <div class="mask-modal -show"></div>
         </div>
 
-        <SuccessModal
-            id="add-location-success-modal"
-            title="Запрос отправлен"
-            message="Запрос на создание локации успешно отправлен. Мы посмотрим и добавим локацию на карту, если всё хорошо."
-        ></SuccessModal>
-
         <ErrorModal
             id="error-modal"
             :title=errorModalData.title
             :message=errorModalData.message
         ></ErrorModal>
-
-        <InfoModal
-            id="add-location-upload-count-limit-warning-modal"
-            title="Предупреждение"
-            message="Можно загрузить только 6 изображений!"
-            secondary="true"
-        ></InfoModal>
-
-        <InfoModal
-            id="add-location-upload-size-limit-warning-modal"
-            title="Предупреждение"
-            message="Изображение должно быть не больше 5 мегабайт! Выберите поменьше."
-            secondary="true"
-        ></InfoModal>
 
         <loading v-model:active="isLoading"
                  :can-cancel="false"
@@ -168,7 +148,7 @@ export default {
                     if (newValue.includes('_active')) {
                         this.clearForm();
                         this.locationId = window.current_opened_location_id;
-                        this.editItem();
+                        this.showItem();
                     } else {
                         this.locationId = window.current_opened_location_id = null;
                     }
@@ -207,9 +187,9 @@ export default {
         }
     },
     methods: {
-        editItem() {
+        showItem() {
             this.errors = null;
-            this.$store.dispatch('locations/edit', {id: this.locationId}).then(
+            this.$store.dispatch('locations/show', {id: this.locationId}).then(
                 success => {
                     this.fillForm();
                 },
@@ -227,8 +207,13 @@ export default {
             });
         },
 
+        openEditLocationModal() {
+            //closeModal('view-lacation');
+            openModal('edit-lacation');
+        },
+
         fillForm() {
-            let location_data = this.$store.getters['locations/locationData'];
+            let location_data = this.$store.getters['locations/locationShowData'];
             this.title = location_data.title;
             this.description = location_data.description;
             this.category = location_data.category;

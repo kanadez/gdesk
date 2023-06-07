@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\UpdateLocationRequest;
 use App\Repository\RouteRepository;
 use Illuminate\Http\Request;
 
@@ -84,6 +85,16 @@ class LocationsController extends Controller
         ]);
     }
 
+    public function show(int $id)
+    {
+        $show_result = $this->location->show($id);
+
+        return response()->json([
+            'status' => $show_result->success,
+            'location' => $show_result->returnValue
+        ]);
+    }
+
     public function edit(int $id)
     {
         $edit_result = $this->location->edit($id);
@@ -91,6 +102,16 @@ class LocationsController extends Controller
         return response()->json([
             'status' => $edit_result->success,
             'location' => $edit_result->returnValue
+        ]);
+    }
+
+    public function update(UpdateLocationRequest $request, int $id)
+    {
+        $update_result = $this->location->update($request->validated(), $id);
+
+        return response()->json([
+            'status' => $update_result->success,
+            'location_id' => $update_result->returnValue
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\LocationRoute;
 use App\Models\User;
 
 use Illuminate\Support\Facades\DB;
@@ -43,6 +44,19 @@ class Route
         ]);
 
         return Result::success($created_route->id);
+    }
+
+    /**
+     * Прикревляет лоакцию к маршруту
+     *
+     * @param int $location_id
+     * @param int $route_id
+     */
+    public function linkToLocation(int $location_id, int $route_id) {
+        $new_route = new LocationRoute();
+        $new_route->location_id = $location_id;
+        $new_route->route_id = $route_id;
+        $new_route->save();
     }
 
 }

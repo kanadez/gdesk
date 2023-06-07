@@ -35,6 +35,17 @@ class LocationsService {
         );
     }
 
+    showLocation(params) {
+        return axios.get(LOCATIONS_API_URL + `/${params.id}/show`, {}).then(
+            (response) => {
+                return Promise.resolve(response.data);
+            },
+            (error) => {
+                return Promise.reject(error);
+            }
+        );
+    }
+
     editLocation(params) {
         return axios.get(LOCATIONS_API_URL + `/${params.id}/edit`, {}).then(
             (response) => {

@@ -13,7 +13,7 @@ use App\Presenter\LocationImagePresenter;
 use App\Presenter\LocationTagPresenter;
 use Illuminate\Support\Carbon;
 
-class LocationTransformer extends BaseTransformer
+class LocationEditTransformer extends BaseTransformer
 {
 
     /**
@@ -34,8 +34,8 @@ class LocationTransformer extends BaseTransformer
             'title' => $location->title,
             'ymaps_marker' => $location->ymaps_marker,
             'images' => $images_presented['data'],
-            'category' => $location->category->category->name,
-            'route' => !empty($location->route) ? $location->route->route->name : '',
+            'category' => $location->category->category,
+            'route' => !empty($location->route) ? $location->route->route : '',
             'tags' => $tags_presented['data'],
             'description' => $location->description,
         ];
