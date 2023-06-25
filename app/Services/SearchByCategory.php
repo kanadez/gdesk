@@ -2,7 +2,12 @@
 
 namespace App\Services;
 
+use App\Criteria\LocationsForSearchCriteria;
+use App\Criteria\RoutesWithImageForSearchCriteria;
 use App\Models\LocationCategory;
+use App\Presenter\LocationForSearchPresenter;
+use App\Presenter\RouteForPopularPresenter;
+use App\Presenter\RouteForSearchPresenter;
 use App\Repository\CategoryRepository;
 use App\Repository\RouteRepository;
 
@@ -47,19 +52,20 @@ class SearchByCategory
                         ->with('location_category.locations.route.route')
                         ->find($data['category']);
 
-        $merged_results = [];
+        $merged_results = $category->location_category->pluck('location_id')->toArray();
+        $unique_locations_ids = array_unique($merged_results);
+        $routes_with_images          = $this->locations
+                                            ->setPresenter(RouteForSearchPresenter::class)
+                                            ->getByCriteria(new RoutesWithImageForSearchCriteria($unique_locations_ids));
 
-        foreach ($category->location_category as $category_locations) {
-            foreach ($category_locations->locations as $location) {
-                if (!empty($location->route)) {
-                    $merged_results[] = $location->route->route->toArray();
-                }
-            }
-        }
+        $locations_titles_with_route = $this->locations
+                                            ->setPresenter(LocationForSearchPresenter::class)
+                                            ->getByCriteria(new LocationsForSearchCriteria($unique_locations_ids));
 
-        $uniqued_results = array_unique($merged_results, SORT_REGULAR);
-
-        return Result::success($uniqued_results);
+        return Result::success([
+            'routes' => $routes_with_images['data'],
+            'routes_locations' => $locations_titles_with_route['data']
+        ]);
     }
 
 }

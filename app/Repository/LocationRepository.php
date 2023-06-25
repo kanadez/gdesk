@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: a6y
- * Date: 30.07.18
- * Time: 10:27
+ * User: kanadez
+ *
+ *
  */
 
 namespace App\Repository;

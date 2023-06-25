@@ -6,7 +6,8 @@
                 <div class="modal__body">
                     <div class="header__center">
                         <div class="title">Изменить локацию</div>
-                        <div class="modal__close" onclick="closeModal('edit-lacation')"><img src="images/icon/i-close.svg">
+                        <div class="modal__close" onclick="closeModal('edit-lacation')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M24 12c0-6.627-5.373-12-12-12S0 5.373 0 12s5.373 12 12 12 12-5.373 12-12zm-8.293-3.707a1 1 0 0 1 0 1.414L13.414 12l2.293 2.293a1 1 0 0 1-1.414 1.414L12 13.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L10.586 12 8.293 9.707a1 1 0 0 1 1.414-1.414L12 10.586l2.293-2.293a1 1 0 0 1 1.414 0z" fill="currentColor"></path></svg>
                         </div>
                     </div>
                     <form onsubmit="return false">
@@ -54,7 +55,7 @@
                         </div>
                         <button v-if="routes.length === 0" class="btn" onclick="openModal('create-route-and-edit-location-modal')">Добавить в маршрут (не обязательно)</button>
                         <button v-if="routes.length > 0 && route === ''" class="btn" onclick="openModal('create-route-and-edit-location-modal')">Создать новый маршрут</button>
-                        <button class="btn" type="button" @click="submit">Сохранить изменения</button>
+                        <button class="btn btn-primary" type="button" @click="submit">Сохранить изменения</button>
                     </form>
                 </div>
             </div>

@@ -21,22 +21,8 @@ mix.js('resources/js/app.js', 'public/js')
         'resources/js/ui/modals.js',
     ], 'public/js/all.combined.js')
     .js('resources/js/app/ymaps-jquery.js', 'public/js')
-    .styles([
-        'resources/css/fonts/fonts.scss',
-        'resources/css/common/normalize.scss',
-        'resources/css/common/common.scss',
-        'resources/css/header/header.scss',
-        'resources/css/footer/footer.scss',
-        'resources/css/style/owl.scss',
-        'resources/css/style/style.scss',
-        'resources/css/style/ymaps.scss',
-    ], 'public/css/all.combined.scss')
     .copy('resources/fonts/', 'public/fonts')
     .copy('resources/images/', 'public/images')
-    .sass('public/css/all.combined.scss', 'public/css/all.combined.css')
+    .sass('resources/css/all.combined.scss', 'public/css/all.combined.css')
     .vue()
-    //.postCss('resources/css/app.css', 'public/css', [
-    //    require("tailwindcss"),
-    //    require("autoprefixer")
-    //])
     .version();

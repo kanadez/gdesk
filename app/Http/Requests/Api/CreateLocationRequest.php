@@ -1,8 +1,8 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: a6y
- * Date: 30.07.18
+ * User: kanadez
+ *
  * Time: 10:29
  */
 
@@ -25,7 +25,7 @@ class CreateLocationRequest extends FormRequest
             'description' => 'required|string|max:1000',
             'images' => 'required|array|min:1',
             'tags'    => 'required|array|min:1',
-            'tags.*'  => 'required|string|distinct|min:2',
+            'tags.*'  => 'required|string|min:2',
             'title' => 'required|string|max:255',
         ];
     }

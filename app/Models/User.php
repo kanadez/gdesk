@@ -41,4 +41,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    // TODO заменить на laratrust или подобный
+    public function isAdmin()
+    {
+        return true;
+    }
 }

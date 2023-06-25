@@ -1,15 +1,18 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: a6y
+ * User: kanadez
  * Date: 18.07.18
  * Time: 15:43
  */
 
 namespace App\Http\Controllers\Api;
 
+use App\Criteria\RoutesWithImageCriteria;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\UpdateLocationRequest;
+use App\Presenter\RouteForPopularPresenter;
+use App\Presenter\RoutePresenter;
 use App\Repository\RouteRepository;
 use Illuminate\Http\Request;
 
@@ -62,11 +65,16 @@ class LocationsController extends Controller
      */
     public function create()
     {
+        $categories = $this->categories->all();
+        $routes = $this->routes
+                        ->pushCriteria(RoutesWithImageCriteria::class)
+                        ->setPresenter(RouteForPopularPresenter::class)
+                        ->orderBy('created_at', 'desc')
+                        ->all();
+
         return response()->json([
-            'categories' => $this->categories->all(),
-            'popular_routes' => $this->routes
-                                    ->orderBy('created_at', 'desc')
-                                    ->all()
+            'categories' => $categories,
+            'popular_routes' => $routes['data']
         ]);
     }
 

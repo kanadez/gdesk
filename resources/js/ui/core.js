@@ -108,9 +108,9 @@ function initSliders(){
 
     //carousel-tag
     $('.tag-slider').owlCarousel({
-        loop: true,
+        loop: false,
         margin: 10,
-        nav: true,
+        nav: false,
         dots: false,
         autoWidth: true,
         items: 4,
@@ -119,8 +119,8 @@ function initSliders(){
     $('.img-slider').owlCarousel({
         loop: true,
         margin: 10,
-        nav: true,
-        dots: false,
+        nav: false,
+        dots: true,
         items: 1,
     });
 }
