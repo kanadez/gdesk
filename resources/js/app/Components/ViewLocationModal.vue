@@ -47,14 +47,16 @@
                             <span v-if="isTextPlaying">(<a href="javascript:void(0)" @click="pauseText">Стоп</a>)</span>
                         </div>
                         <div class="text">{{ description }}</div>
-                        <div v-if="route != ''" class="text-title">Маршрут</div>
-                        <div v-if="route != ''" class="text">{{ route }}</div>
+                        <div v-if="routes.length > 0" class="text-title">Маршруты</div>
+                        <div v-if="routes.length > 0" class="text">
+                            <span style="margin-right: 5px; position: relative" v-for="route in routes">{{ route.name }}</span>
+                        </div>
                         <div class="text hashtags" style="word-wrap: break-word">
                             <span style="margin-right: 5px; position: relative" v-for="tag in tags">{{ tag.name }}</span>
                         </div>
                         <a class="btn btn-primary" :href="ymapsRouteUrl">Построить сюда маршрут от меня</a>
                         <a class="btn" href="#" @click="openEditLocationModal">Редактировать локацию</a>
-                        <!--<a class="btn" href="#">Добавить в группу / маршрут</a>-->
+                        <a class="btn" onclick="openModal('add-location-to-route-modal')" href="#">Добавить в маршрут</a>
                         <a class="btn" onclick="closeModal('view-lacation')" href="#">Закрыть</a>
                         <!--<div class="location__info">
                             <div class="rating-info"><span>4.0</span>
@@ -85,8 +87,14 @@
             <div class="mask-modal -show"></div>
         </div>
 
+        <AddLocationToRouteModal
+            id="add-location-to-route-modal"
+            :location_title=title
+            @submit="addToRoute"
+        ></AddLocationToRouteModal>
+
         <ErrorModal
-            id="error-modal"
+            id="add-error-modal"
             :title=errorModalData.title
             :message=errorModalData.message
         ></ErrorModal>
@@ -101,6 +109,7 @@
 <script>
 
 import Errors from "../UI/Errors";
+import AddLocationToRouteModal from "../Components/AddLocationToRouteModal";
 import SuccessModal from "../Components/SuccessModal";
 import ErrorModal from "../Components/ErrorModal";
 import InfoModal from "../Components/InfoModal";
@@ -117,6 +126,7 @@ export default {
     name: "ViewLocationModal",
     components: {
         Errors,
+        AddLocationToRouteModal,
         SuccessModal,
         InfoModal,
         ErrorModal,
@@ -176,7 +186,7 @@ export default {
             title: '',
             description: '',
             category: '',
-            route: '',
+            routes: [],
             images: [],
             tags: [],
             ymapsRouteUrl: '',
@@ -219,7 +229,7 @@ export default {
             this.title = location_data.title;
             this.description = location_data.description;
             this.category = location_data.category;
-            this.route = location_data.route;
+            this.routes = location_data.routes;
             this.images = location_data.images;
             this.tags = location_data.tags;
             ymapsrouting.buildRouteUrl([location_data.ymaps_marker.lat,location_data.ymaps_marker.lng])
@@ -238,9 +248,35 @@ export default {
             this.title = '';
             this.description = '';
             this.category = '';
-            this.route = '';
+            this.routes = '';
             this.images = [];
             this.tags = [];
+        },
+
+        addToRoute(route_id) {
+            let data = {
+                location_id: this.locationId,
+                route_id: route_id
+            };
+
+            this.$store.dispatch(`locations/addToRoute`, data).then(
+                success => {
+                    this.clearForm();
+                    this.showItem();
+                    closeModal('add-location-to-route-modal');
+                },
+                error => {
+                    this.errors = error; // TODO обработать через миксим
+                    this.errorModalData = this.handleError(error);
+                    openModal('add-error-modal');
+                }
+            ).catch(error => {
+                this.errors = error;
+                this.errorModalData = this.handleError(error);
+                openModal('add-error-modal');
+            }).finally(() => {
+                this.isSending = false;
+            });
         },
 
         onModalClose() {

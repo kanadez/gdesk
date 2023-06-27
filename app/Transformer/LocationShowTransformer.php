@@ -11,6 +11,7 @@ namespace App\Transformer;
 use App\Models\Location;
 use App\Presenter\LocationImagePresenter;
 use App\Presenter\LocationTagPresenter;
+use App\Presenter\LocationRoutePresenter;
 use Illuminate\Support\Carbon;
 
 class LocationShowTransformer extends BaseTransformer
@@ -29,13 +30,16 @@ class LocationShowTransformer extends BaseTransformer
         $tagPresenter = new LocationTagPresenter();
         $tags_presented = $tagPresenter->present($location->tags);
 
+        $locationRoutePresenter = new LocationRoutePresenter();
+        $routes_presented = $locationRoutePresenter->present($location->routes);
+
         return [
             'id' => $location->id,
             'title' => $location->title,
             'ymaps_marker' => $location->ymaps_marker,
             'images' => $images_presented['data'],
             'category' => $location->category->category->name,
-            'route' => !empty($location->route) ? $location->route->route->name : '',
+            'routes' => !empty($location->routes) ? $routes_presented['data'] : [],
             'tags' => $tags_presented['data'],
             'description' => $location->description,
         ];

@@ -18,6 +18,9 @@ class Route extends BaseModel
     protected $fillable = [
         "id",
         "name",
+        "label",
+        "slug",
+        "hidden",
         "created_at",
         "updated_at",
     ];

@@ -42,9 +42,9 @@ class Location extends BaseModel
         return $this->hasMany(LocationTagLocation::class);
     }
 
-    public function route()
+    public function routes()
     {
-        return $this->hasOne(LocationRoute::class);
+        return $this->hasMany(LocationRoute::class);
     }
 
     public function ymaps_marker()

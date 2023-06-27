@@ -49,7 +49,7 @@ class SearchByCategory
     public function find(array $data)
     {
         $category = $this->categories
-                        ->with('location_category.locations.route.route')
+                        ->with('location_category.locations.routes.route')
                         ->find($data['category']);
 
         $merged_results = $category->location_category->pluck('location_id')->toArray();

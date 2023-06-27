@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\Route;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\Api\CreateYMapsMarkerRequest;
@@ -25,20 +26,36 @@ class YMapsMarkersRouteController extends Controller
      */
     private $repo;
 
-    public function __construct(RouteRepository $repo)
+    /**
+     * @var Route
+     */
+    private $route;
+
+    public function __construct(
+        RouteRepository $repo,
+        Route $route
+    )
     {
         $this->repo = $repo;
+        $this->route = $route;
     }
 
     public function index($route_id)
     {
-        $markers_by_route = $this->repo
-                                ->with('route_locations.location.ymaps_marker')
-                                ->find($route_id);
+        $route = $this->repo->find($route_id);
 
-        $markers = $markers_by_route->route_locations->map(function($route_location){
-            return $route_location->location->ymaps_marker;
-        });
+        if (empty($route->label)) {
+            $markers_by_route = $this->repo
+                                        ->with('route_locations.location.ymaps_marker')
+                                        ->find($route_id);
+
+            $markers = $markers_by_route->route_locations->map(function ($route_location) {
+                return $route_location->location->ymaps_marker;
+            });
+        } else {
+            $handler_response = $this->route->handleLabeled($route);
+            $markers = $handler_response->returnValue;
+        }
 
         return response()->json([
             "status" => "success",

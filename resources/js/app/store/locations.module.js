@@ -122,6 +122,22 @@ export const locations = {
             );
         },
 
+        addToRoute({commit}, params) {
+            commit('startLoading');
+            return LocationsService.addLocationToRoute(params).then(
+                data => {
+                    commit('stopLoading');
+                    commit('addLocationToRouteSuccess', data);
+                    return Promise.resolve(true);
+                },
+                error => {
+                    commit('stopLoading');
+                    commit('addLocationToRouteFailure');
+                    return Promise.reject(error);
+                }
+            );
+        },
+
 
     },
     mutations: {
@@ -160,6 +176,12 @@ export const locations = {
             state.storedLocationId = data.location_id;
         },
         storeLocationFailure(state, data) {
+
+        },
+        addLocationToRouteSuccess(state, data) {
+
+        },
+        addLocationToRouteFailure(state, data) {
 
         },
     },

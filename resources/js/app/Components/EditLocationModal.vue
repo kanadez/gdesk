@@ -47,14 +47,15 @@
                         <div class="row-tags">
                             <div class="tag" v-for="tag in tags">{{ tag }}</div>
                         </div>
-                        <div v-if="routes.length > 0" class="form-row">
+                        <!-- Убрал изменение маршрута, т.к. маршрутов может быть много у локации, и редактировать всё это очень трудно. Маршрут задает при создании и может быть добавлен при просмотре локации -->
+                        <!--<div v-if="routes.length > 0" class="form-row">
                             <select class="input-text" v-model="route">
                                 <option value="">Выберите маршрут для локации</option>
                                 <option v-for="route in routes" :value="route.id">{{ route.name }}</option>
                             </select>
-                        </div>
-                        <button v-if="routes.length === 0" class="btn" onclick="openModal('create-route-and-edit-location-modal')">Добавить в маршрут (не обязательно)</button>
-                        <button v-if="routes.length > 0 && route === ''" class="btn" onclick="openModal('create-route-and-edit-location-modal')">Создать новый маршрут</button>
+                        </div>-->
+                        <!--<button v-if="routes.length === 0" class="btn" onclick="openModal('create-route-and-edit-location-modal')">Добавить в маршрут (не обязательно)</button>
+                        <button v-if="routes.length > 0 && route === ''" class="btn" onclick="openModal('create-route-and-edit-location-modal')">Создать новый маршрут</button>-->
                         <button class="btn btn-primary" type="button" @click="submit">Сохранить изменения</button>
                     </form>
                 </div>
@@ -185,7 +186,7 @@ export default {
             tags: [],
 
             createdRoute: '',
-            route: '',
+            //route: '',
 
             params: {
                 id: null,
@@ -193,7 +194,7 @@ export default {
                 description: '',
                 category: null,
                 images: [],
-                route: '',
+                //route: '',
                 tags: [],
             },
 
@@ -263,7 +264,7 @@ export default {
             this.title = location_data.title;
             this.description = location_data.description;
             this.category = location_data.category.id;
-            this.route = location_data.route.id;
+            //this.route = location_data.route.id;
             this.images = location_data.images;
             this.previewImages = location_data.images.map(image => image.image_path);
             this.tags = location_data.tags.map(tag => tag.name);
@@ -378,7 +379,7 @@ export default {
             this.params.title = this.title;
             this.params.description = this.description;
             this.params.category = this.category;
-            this.params.route = this.route;
+            //this.params.route = this.route;
             this.params.images = this.imagesToUploadPaths;
             this.params.tags = this.tags;
 
@@ -423,7 +424,7 @@ export default {
             this.tags = [];
 
             this.createdRoute = '';
-            this.route = '';
+            //this.route = '';
 
             this.params = {
                 id: null,
@@ -431,7 +432,7 @@ export default {
                 description: '',
                 category: null,
                 images: [],
-                route: '',
+                //route: '',
                 tags: [],
             };
 

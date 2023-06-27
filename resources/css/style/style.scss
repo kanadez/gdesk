@@ -383,6 +383,12 @@ main {
     color: var(--color-text-color-bg);
 }
 
+.btn-primary.ymap-button {
+    padding: 10px;
+    margin: 0 auto;
+    width: 89%;
+}
+
 .btn-border {
     @include flex;
     align-items: center;

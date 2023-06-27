@@ -3,18 +3,16 @@
 namespace App\Services;
 
 use App\Models\LocationRoute;
-use App\Models\User;
+use App\Models\Route as RouteModel;
 
 use App\Presenter\RoutePresenter;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Lang;
 
 use App\Criteria\RoutesWithImageCriteria;
 
 use App\Repository\RouteRepository;
 use App\Services\FunctionResult as Result;
+
+use App\Factory\LabeledRouteHandlersFactory;
 
 class Route
 {
@@ -62,6 +60,21 @@ class Route
         $new_route->location_id = $location_id;
         $new_route->route_id = $route_id;
         $new_route->save();
+    }
+
+    /**
+     * Функция для обработки "меченого" маршрута, локации для которого выводятся после предварительной обработки. Обработчик создается через фабрику
+     *
+     * @param RouteModel $route
+     * @return FunctionResult
+     * @throws \App\Exceptions\LabeledRouteHandlerNotAvailableException
+     */
+    public function handleLabeled(RouteModel $route): FunctionResult
+    {
+        $factory = new LabeledRouteHandlersFactory();
+        $labeledRouteHandler = $factory->make($route->label);
+
+        return $labeledRouteHandler->handle();
     }
 
 }

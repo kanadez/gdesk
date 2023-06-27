@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/{all?}', [AppController::class, 'index'])->where('all', '^(?!api).*$');
 //Route::get('/{all?}', [AppController::class, 'index'])->where('all', '^(?!api)|^(?!test).*$');
 //Route::get('test', [AppController::class, 'test']);

@@ -127,7 +127,9 @@ export default {
         },
         foundRoutes() {
             return this.$store.getters['search/finded'].routes.map(route => {
-                let route_locations = this.$store.getters['search/finded'].routes_locations.filter(location => location.route_id === route.id);
+                let route_locations = this.$store.getters['search/finded'].routes_locations
+                    .filter(location => location.routes
+                        .find(location_route => location_route.id === route.id) !== undefined);
                 let locations_titles = route_locations.map(location => {
                     return location.title;
                 });

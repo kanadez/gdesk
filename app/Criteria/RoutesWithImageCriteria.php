@@ -44,7 +44,7 @@ class RoutesWithImageCriteria implements CriteriaInterface {
                     limit 1) as image_path');
 
         if (Auth::check() && Auth::user()->isAdmin()) {
-            $response->whereRaw('routes.hidden = 1 && routes.hidden = 0');
+            $response->whereRaw('routes.hidden = 1 || routes.hidden = 0');
         } else {
             $response->where('routes.hidden', 0);
         }

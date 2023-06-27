@@ -8,7 +8,7 @@
                     </div>
                 </div>
                 <form>
-                    <div class="text-title">{{ title }}</div>
+                    <div class="title">{{ title }}</div>
                     <div class="label">{{ message }}</div>
                     <button v-if="secondary" class="btn secondary" :onclick="`closeModal('${id}')`" type="button">ОК</button>
                     <button v-else class="btn" :onclick="`closeModal('${id}')`" type="button">ОК</button>

@@ -21,7 +21,7 @@ class UpdateLocationRequest extends FormRequest
     {
         return [
             'category' => 'required|integer|exists:categories,id',
-            'route' => 'nullable|integer|exists:routes,id',
+            //'route' => 'nullable|integer|exists:routes,id',
             'description' => 'required|string|max:1000',
             'images' => 'array',
             'tags'    => 'required|array|min:1',

@@ -31,7 +31,7 @@ class LocationsForSearchCriteria implements CriteriaInterface {
     public function apply($model, RepositoryInterface $repository)
     {
         return $model->selectRaw('locations.id, locations.title')
-                        ->with('route.route')
+                        ->with('routes.route')
                         ->whereIn('locations.id', $this->locations_ids);
     }
 

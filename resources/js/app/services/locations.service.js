@@ -79,6 +79,17 @@ class LocationsService {
         );
     }
 
+    addLocationToRoute(params) {
+        return axios.post(LOCATIONS_API_URL + '/route/add', params).then(
+            (response) => {
+                return Promise.resolve(response.data);
+            },
+            (error) => {
+                return Promise.reject(error);
+            }
+        );
+    }
+
 
 }
 

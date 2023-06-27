@@ -63,7 +63,7 @@ class Location
     public function show(int $id): Result
     {
         $location = $this->locations
-            ->with(['images', 'category.category', 'tags.tag', 'route', 'ymaps_marker'])
+            ->with(['images', 'category.category', 'tags.tag', 'routes', 'ymaps_marker'])
             ->setPresenter(LocationShowPresenter::class)
             ->find($id);
 
@@ -73,7 +73,7 @@ class Location
     public function edit(int $id): Result
     {
         $location = $this->locations
-                            ->with(['images', 'category.category', 'tags.tag', 'route', 'ymaps_marker'])
+                            ->with(['images', 'category.category', 'tags.tag', 'ymaps_marker'])
                             ->setPresenter(LocationEditPresenter::class)
                             ->find($id);
 
@@ -121,14 +121,14 @@ class Location
             $existing_location_category->delete();
         }
 
-        $existing_route = LocationRoute::select('id', 'route_id')
+        /*$existing_route = LocationRoute::select('id', 'route_id')
                                     ->where('location_id', $id)
                                     ->first();
 
         if ($existing_route->route_id !== $data['route'] && !empty($data['route'])) {
             $this->route->linkToLocation($created_location->id, $data['route']);
             $existing_route->delete();
-        }
+        }*/
 
         foreach ($data['images'] as $image_path) {
             $existing_image = LocationImage::select('id')

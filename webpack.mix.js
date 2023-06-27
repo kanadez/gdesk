@@ -24,5 +24,6 @@ mix.js('resources/js/app.js', 'public/js')
     .copy('resources/fonts/', 'public/fonts')
     .copy('resources/images/', 'public/images')
     .sass('resources/css/all.combined.scss', 'public/css/all.combined.css')
+    .sass('resources/sass/app.scss', 'public/css/all.static.combined.css')
     .vue()
     .version();

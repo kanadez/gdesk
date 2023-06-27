@@ -6,6 +6,7 @@ use Illuminate\Routing\Router;
 use App\Http\Controllers\Api\YMapsMarkerController;
 use App\Http\Controllers\Api\YMapsMarkersRouteController;
 use App\Http\Controllers\Api\LocationsController;
+use App\Http\Controllers\Api\LocationsRoutesController;
 use App\Http\Controllers\Api\RoutesController;
 use App\Http\Controllers\Api\SearchTagsController;
 use App\Http\Controllers\Api\SearchByQueryController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\Api\LocationsImagesController;
 */
 
 Route::group([
+    'middleware' => ['api'],
     'prefix'    => "ymaps",
     'as'        => 'ymaps.',
 ], function (Router $router) {
@@ -36,6 +38,7 @@ Route::group([
 });
 
 Route::group([
+    'middleware' => ['api'],
     'prefix'    => "search",
     'as'        => 'search.',
 ], function (Router $router) {
@@ -46,6 +49,7 @@ Route::group([
 });
 
 Route::group([
+    'middleware' => ['api'],
     'prefix'    => "locations",
     'as'        => 'locations.',
 ], function (Router $router) {
@@ -61,9 +65,12 @@ Route::group([
         ->name('locations-update');
     $router->post('/images/upload', [LocationsImagesController::class, 'store'])
         ->name('locations-images-upload');
+    $router->post('/route/add', [LocationsRoutesController::class, 'store'])
+        ->name('locations-add-to-route');
 });
 
 Route::group([
+    'middleware' => ['api'],
     'prefix'    => "routes",
     'as'        => 'routes.',
 ], function (Router $router) {
@@ -74,6 +81,7 @@ Route::group([
 });
 
 Route::group([
+    'middleware' => ['api'],
     'prefix'    => "tags",
     'as'        => 'tags.',
 ], function (Router $router) {

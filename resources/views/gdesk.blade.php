@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
         <title>{{ config('app.name') }}</title>
         <!--Tailwind app.css-->
         <!--<link rel="stylesheet" href=" /*mix('css/app.css')*/ " />-->
@@ -16,5 +17,13 @@
     <script type="text/javascript" src="{{ mix('js/all.combined.js') . '?v=' . time() }}"></script>
     <script type="text/javascript" src="{{ mix('js/ymaps-jquery.js') . '?v=' . time() }}"></script>
     <script type="text/javascript" src="{{ mix('js/app.js') . '?v=' . time() }}"></script>
+
+    <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
     </body>
 </html>

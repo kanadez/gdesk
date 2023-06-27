@@ -39,7 +39,7 @@ class YMapsJQuery {
                     'Хотите создать здесь локацию?' +
                     '</div>' +
                     '<div style="margin: 10px; width: 100%; text-align: center;">' +
-                    '<button onclick="openModal(\'add-lacation\');ymapsjq.myMap.balloon.close();" style="padding:10px" id="my-button"> Создать локацию </button>' +
+                    '<button onclick="openModal(\'add-lacation\');ymapsjq.myMap.balloon.close();" class="btn btn-primary ymap-button" id="my-button"> Создать локацию </button>' +
                     '</div>', {
                         closeButton: true
                     }
@@ -116,6 +116,7 @@ class YMapsMarkers {
             $.ajax({
                 type: "GET",
                 url: `/api/ymaps/markers/route/${route_id}`,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 success: function (data) {
                     ymapsmarkers.removeAllMarkers();
 
@@ -197,6 +198,7 @@ class YMapsMarkers {
         $.ajax({
             type: "POST",
             url: "/api/ymaps/markers/store",
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             data: {
                 location_id: location_id,
                 lat: coords[0],
